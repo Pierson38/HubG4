@@ -21,6 +21,64 @@ class MessagesRepository extends ServiceEntityRepository
         parent::__construct($registry, Messages::class);
     }
 
+    public function getNotReadCount($user, $conversation): int
+    {
+        return $this->createQueryBuilder('m')
+            ->select('count(m.id)')
+            ->where('m.conversation = :conversation')
+            ->andWhere('m.createdBy != :user')
+            ->andWhere('m.isRead = :read')
+            ->setParameter('user', $user)
+            ->setParameter('conversation', $conversation)
+            ->setParameter('read', false)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function getLastMessages($user, $conversation): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.conversation = :conversation')
+            ->andWhere('m.createdBy != :user')
+            ->andWhere('m.isRead = :read')
+            ->setParameter('user', $user)
+            ->setParameter('conversation', $conversation)
+            ->setParameter('read', false)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function setNotReadRead($user, $conversation): int
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.conversation = :conversation')
+            ->andWhere('m.createdBy != :user')
+            ->andWhere('m.isRead = :read')
+            ->setParameter('user', $user)
+            ->setParameter('conversation', $conversation)
+            ->setParameter('read', false)
+            ->update()
+            ->set('m.isRead', ':readTrue')
+            ->setParameter('readTrue', true)
+            ->getQuery()
+            ->execute();
+    }
+
+    /**
+     * @return Messages Returns an array of Conversations objects
+     */
+    public function getLastMessage($conversation): ?Messages
+    {
+        $query = $this->createQueryBuilder('m')
+            ->where('m.conversation = :conversation')
+            ->setParameter('conversation', $conversation)
+            ->orderBy('m.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+            return $query ? $query[0] : null;
+    }
+
 //    /**
 //     * @return Messages[] Returns an array of Messages objects
 //     */

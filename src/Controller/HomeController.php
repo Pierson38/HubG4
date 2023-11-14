@@ -21,7 +21,7 @@ class HomeController extends AbstractController
         return $this->render('index.html.twig');
     }
 
-    #[Route('/{path}')]
+   /*  #[Route('/{path}')]
     public function root($path)
     {
         if ($this->loader->exists($path.'.html.twig')) {
@@ -31,5 +31,5 @@ class HomeController extends AbstractController
             return $this->render($path.'.html.twig');
         }
         throw $this->createNotFoundException('The Requested Page Not Found.');
-    }
+    } */
 }

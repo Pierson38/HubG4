@@ -29,10 +29,14 @@ class Conversations
     #[ORM\OneToMany(mappedBy: 'conversation', targetEntity: Messages::class, orphanRemoval: true)]
     private Collection $messages;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $updatedAt = null;
+
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
         $this->messages = new ArrayCollection();
     }
 
@@ -103,6 +107,18 @@ class Conversations
                 $message->setConversation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

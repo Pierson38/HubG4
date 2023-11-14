@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Conversations;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,28 +22,41 @@ class ConversationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Conversations::class);
     }
 
-//    /**
-//     * @return Conversations[] Returns an array of Conversations objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Conversations[] Returns an array of Conversations objects
+     */
+    public function getAllUserConversations(User $user): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.fromUser = :val')
+            ->orWhere('c.toUser = :val')
+            ->setParameter('val', $user)
+            ->orderBy('c.updatedAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Conversations
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function verifConversation($client, $other): ?Conversations
+    {
+        $query = $this->createQueryBuilder('c')
+            ->where('c.fromUser = :user AND c.toUser = :other')
+            ->orWhere('c.fromUser = :other AND c.toUser = :user')
+            ->setParameter('user', $client)
+            ->setParameter('other', $other)
+            ->orderBy('c.updatedAt', 'ASC')
+            ->getQuery()
+            ->getResult();
+
+        return $query ? $query[0] : null;
+    }
+
+    //    public function findOneBySomeField($value): ?Conversations
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }
