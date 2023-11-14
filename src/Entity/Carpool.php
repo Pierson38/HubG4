@@ -40,6 +40,9 @@ class Carpool
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $price = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -162,6 +165,18 @@ class Carpool
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getPrice(): ?int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(?int $price): static
+    {
+        $this->price = $price;
 
         return $this;
     }

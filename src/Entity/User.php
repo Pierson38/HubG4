@@ -89,6 +89,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Lbc::class, orphanRemoval: true)]
     private Collection $lbcs;
 
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Files::class)]
+    private Collection $files;
+
     public function __construct()
     {
         $this->coursesProfessor = new ArrayCollection();
@@ -105,6 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->carpools = new ArrayCollection();
         $this->carpoolMembers = new ArrayCollection();
         $this->lbcs = new ArrayCollection();
+        $this->files = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -645,6 +649,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($lbc->getCreatedBy() === $this) {
                 $lbc->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Files>
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    public function addFile(Files $file): static
+    {
+        if (!$this->files->contains($file)) {
+            $this->files->add($file);
+            $file->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFile(Files $file): static
+    {
+        if ($this->files->removeElement($file)) {
+            // set the owning side to null (unless already changed)
+            if ($file->getCreatedBy() === $this) {
+                $file->setCreatedBy(null);
             }
         }
 

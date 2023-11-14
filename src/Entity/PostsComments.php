@@ -32,6 +32,10 @@ class PostsComments
     #[ORM\OneToMany(mappedBy: 'postComment', targetEntity: PostsReport::class)]
     private Collection $postsReports;
 
+    #[ORM\ManyToOne(inversedBy: 'postsComments')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Posts $post = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -118,6 +122,18 @@ class PostsComments
                 $postsReport->setPostComment(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPost(): ?Posts
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Posts $post): static
+    {
+        $this->post = $post;
 
         return $this;
     }

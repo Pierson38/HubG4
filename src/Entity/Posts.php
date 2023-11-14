@@ -42,12 +42,16 @@ class Posts
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: PostsReport::class)]
     private Collection $postsReports;
 
+    #[ORM\OneToMany(mappedBy: 'post', targetEntity: PostsComments::class, orphanRemoval: true)]
+    private Collection $postsComments;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
         $this->postsImages = new ArrayCollection();
         $this->postsReports = new ArrayCollection();
+        $this->postsComments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,6 +185,36 @@ class Posts
             // set the owning side to null (unless already changed)
             if ($postsReport->getPost() === $this) {
                 $postsReport->setPost(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PostsComments>
+     */
+    public function getPostsComments(): Collection
+    {
+        return $this->postsComments;
+    }
+
+    public function addPostsComment(PostsComments $postsComment): static
+    {
+        if (!$this->postsComments->contains($postsComment)) {
+            $this->postsComments->add($postsComment);
+            $postsComment->setPost($this);
+        }
+
+        return $this;
+    }
+
+    public function removePostsComment(PostsComments $postsComment): static
+    {
+        if ($this->postsComments->removeElement($postsComment)) {
+            // set the owning side to null (unless already changed)
+            if ($postsComment->getPost() === $this) {
+                $postsComment->setPost(null);
             }
         }
 

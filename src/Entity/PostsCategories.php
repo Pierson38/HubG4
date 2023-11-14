@@ -19,6 +19,7 @@ class PostsCategories
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'postsChildren')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?self $categoryParent = null;
 
     #[ORM\OneToMany(mappedBy: 'categoryParent', targetEntity: self::class)]
