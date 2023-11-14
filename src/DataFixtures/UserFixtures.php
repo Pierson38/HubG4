@@ -7,9 +7,14 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
+
+    function __construct(private UserPasswordHasherInterface $userPasswordHasher) {
+        
+    }
 
     public const USER_REFERENCE = 'user-reference';
 
@@ -26,7 +31,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
                 $user->setRoles(['ROLE_PROFESSOR']);
             }
             $user->setEmail($faker->email());
-            $user->setPassword($faker->password());
+            $user->setPassword($this->userPasswordHasher->hashPassword($user, 'password'));
             $user->setPicture($faker->imageUrl());
             $user->setFirstName($faker->firstName());
             $user->setLastName($faker->lastName());

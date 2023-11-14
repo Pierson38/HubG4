@@ -35,6 +35,19 @@ class MessagesRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getLastMessages($user, $conversation): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.conversation = :conversation')
+            ->andWhere('m.createdBy != :user')
+            ->andWhere('m.isRead = :read')
+            ->setParameter('user', $user)
+            ->setParameter('conversation', $conversation)
+            ->setParameter('read', false)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function setNotReadRead($user, $conversation): int
     {
         return $this->createQueryBuilder('m')

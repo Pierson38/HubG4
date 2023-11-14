@@ -40,16 +40,32 @@ class MessagerieController extends AbstractController
         $conversations = [];
         $conversationss = $conversationsRepository->getAllUserConversations($user);
         foreach ($conversationss as $value) {
-            $conversations[] = [$value, $messagesRepository->getNotReadCount($user, $value), $messagesRepository->getLastMessage($value)];
+            if ($value->getFromUser() == $user) {
+                $otherUser = $value->getToUser();
+            } else {
+                $otherUser = $value->getFromUser();
+            }
+            $conversations[] = [$value, $messagesRepository->getNotReadCount($user, $value), $messagesRepository->getLastMessage($value), $otherUser];
         }
 
+        if (count($conversations) > 0) {
+            $conv = $conversations[0][0];
+            $messagesRepository->setNotReadRead($user, $conv);
+        } else {
+            $conv = null;
+        }
+       
+        // dd($conversations[0]);
+
         
-        return $this->render('messagerie/index.html.twig', [
-            'controller_name' => 'MessagerieController',
+        return $this->render('messagerie/chat.html.twig', [
+            'user' => $user,
+            'conv' => $conv,
+            'conversations' => $conversations
         ]);
     }
 
-    #[Security("is_granted('IS_AUTHENTICATED_FULLY')")]
+    // #[Security("is_granted('IS_AUTHENTICATED_FULLY')")]
     #[Route('/messagerie/{id}', name: 'app_messengers_solo')]
     public function messagesSolo(Conversations $conv, ConversationsRepository $conversationsRepository, MessagesRepository $messagesRepository): Response
     {
@@ -61,26 +77,43 @@ class MessagerieController extends AbstractController
         $conversations = [];
         $conversationss = $conversationsRepository->getAllUserConversations($user);
         foreach ($conversationss as $value) {
-            $conversations[] = [$value, $messagesRepository->getNotReadCount($user, $value), $messagesRepository->getLastMessage($value)];
+            if ($value->getFromUser() == $user) {
+                $otherUser = $value->getToUser();
+            } else {
+                $otherUser = $value->getFromUser();
+            }
+            $conversations[] = [$value, $messagesRepository->getNotReadCount($user, $value), $messagesRepository->getLastMessage($value), $otherUser];
         }
 
         
-        return $this->render('pages/messengers/messagesSolo.html.twig', [
+        return $this->render('messagerie/chat.html.twig', [
             'user' => $user,
             'conv' => $conv,
             'conversations' => $conversations
         ]);
     }
 
-    #[Route('/conversation-utils/getTemplateSelfMessage', name: 'app_messengers_self_template', methods: ['POST'])]
-    public function getTemplateSelfMessage(Request $request): JsonResponse
+    #[Route('/delete-conversation/{id}', name: 'app_messagerie_delete')]
+    public function deleteConv(Conversations $conversation, EntityManagerInterface $manager): Response
+    {
+
+    
+        $manager->remove($conversation);
+        $manager->flush();
+
+        $this->addFlash('success', "La conversation a bien été supprimée");
+
+        
+        return $this->redirectToRoute('app_messagerie');
+    }
+
+    #[Route('/conversation-utils/getTemplateSelfMessage/{id}', name: 'app_messengers_self_template', methods: ['GET'])]
+    public function getTemplateSelfMessage(Messages $message, Request $request): JsonResponse
     {
 
         $response = new JsonResponse(
-            $this->renderView('components/messengers/messenger_message.html.twig', [
-                'picture' => '/images/profile-img.png',
-                'message' => $request->request->get('message'),
-                'from_current_user' => filter_var($request->request->get('self'), FILTER_VALIDATE_BOOLEAN)
+            $this->renderView('messagerie/message.html.twig', [
+                'message' => $message,
             ])
 
         );
@@ -88,7 +121,7 @@ class MessagerieController extends AbstractController
         return $response;
     }
 
-    #[Security("is_granted('IS_AUTHENTICATED_FULLY')")]
+    // #[Security("is_granted('IS_AUTHENTICATED_FULLY')")]
     #[Route('/conversation/{id}/add-message', name: 'app_messengers_add_message', methods: ['POST'])]
     public function sendMessage(Conversations $conversation = null, Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, HubInterface $hub, UserRepository $userRepository): JsonResponse
     {
@@ -111,21 +144,8 @@ class MessagerieController extends AbstractController
         $manager->flush();
 
 
-
-        $jsonMessage = $serializer->serialize($message, 'json', [
-            'groups' => ['message'] // On serialize la réponse avant de la renvoyer
-        ]);
-
-
-        $update = new Update(
-            'https://example.com/conv/' . $conversation->getId(),
-            $jsonMessage
-        );
-
-        $hub->publish($update);
-
         $response = new JsonResponse( // Enfin, on retourne la réponse
-            'OK',
+            $message->getId(),
             Response::HTTP_OK,
             [],
             true
@@ -133,6 +153,26 @@ class MessagerieController extends AbstractController
         $response->headers->set('Access-Control-Allow-Origin', '*');
         return $response;
     }
+
+    // #[Security("is_granted('IS_AUTHENTICATED_FULLY')")]
+    #[Route('/conversation/{id}/get-messages', name: 'app_messengers_get_message', methods: ['GET'])]
+    public function getMessages(Conversations $conversation, Request $request, MessagesRepository $messagesRepository, SerializerInterface $serializer, EntityManagerInterface $manager): JsonResponse
+    {
+        $messages = $messagesRepository->getLastMessages($conversation, $this->getUserFromInterface());
+        $toReturn = [];
+        foreach ($messages as $value) {
+            $toReturn[] = $serializer->serialize($value, 'json', [
+                'groups' => ['message'] // On serialize la réponse avant de la renvoyer
+            ]);
+
+            $value->setIsRead(true);
+            $manager->persist($value);
+        }
+        $manager->flush();
+        return new JsonResponse($toReturn);
+    }
+
+
 
     #[Security("is_granted('IS_AUTHENTICATED_FULLY')")]
     #[Route('/create-conversation/{id}', name: 'app_messengers_create_converstation_user')]

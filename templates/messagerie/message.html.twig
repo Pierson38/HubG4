@@ -1,11 +1,29 @@
-{% set message = message %}
-{% set picture = picture %}
-{% set from_current_user = from_current_user %}
 
-<div class="messenger-message messenger-message__postion-{{ from_current_user ? 'from-user' : 'from-another' }}">
-    <div class="messenger-message__picture">
-        <img src="{{ picture }}" alt="">
+<li
+class=" {% if message.createdBy == app.user %} right {% endif %} last-chat">
+<div class="conversation-list">
+    <div class="dropdown">
+
+        <a class="dropdown-toggle" href="#" role="button"
+            data-bs-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <i class="bx bx-dots-vertical-rounded"></i>
+        </a>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Copy</a>
+            <a class="dropdown-item" href="#">Save</a>
+            <a class="dropdown-item" href="#">Forward</a>
+            <a class="dropdown-item" href="#">Delete</a>
+        </div>
     </div>
-    
-    <p class="messenger-message__message-{{ from_current_user ? 'from-user' : 'from-another' }}">{{ message }}</p>
+    <div class="ctext-wrap">
+        <div class="conversation-name">{{message.createdBy.firstname}}</div>
+        <p>
+            {{message.content}}
+        </p>
+
+        <p class="chat-time mb-0"><i
+                class="bx bx-time-five align-middle me-1"></i>{{message.createdAt|format_datetime('none', 'short', locale="fr")}}</p>
+    </div>
 </div>
+</li>
