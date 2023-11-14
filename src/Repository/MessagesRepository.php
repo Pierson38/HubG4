@@ -26,7 +26,7 @@ class MessagesRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('m')
             ->select('count(m.id)')
             ->where('m.conversation = :conversation')
-            ->andWhere('m.userAccount != :user')
+            ->andWhere('m.createdBy != :user')
             ->andWhere('m.isRead = :read')
             ->setParameter('user', $user)
             ->setParameter('conversation', $conversation)
@@ -39,7 +39,7 @@ class MessagesRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.conversation = :conversation')
-            ->andWhere('m.userAccount != :user')
+            ->andWhere('m.createdBy != :user')
             ->andWhere('m.isRead = :read')
             ->setParameter('user', $user)
             ->setParameter('conversation', $conversation)

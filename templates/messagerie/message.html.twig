@@ -1,0 +1,11 @@
+{% set message = message %}
+{% set picture = picture %}
+{% set from_current_user = from_current_user %}
+
+<div class="messenger-message messenger-message__postion-{{ from_current_user ? 'from-user' : 'from-another' }}">
+    <div class="messenger-message__picture">
+        <img src="{{ picture }}" alt="">
+    </div>
+    
+    <p class="messenger-message__message-{{ from_current_user ? 'from-user' : 'from-another' }}">{{ message }}</p>
+</div>

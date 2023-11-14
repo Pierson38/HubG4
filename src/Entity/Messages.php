@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MessagesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MessagesRepository::class)]
@@ -29,10 +30,17 @@ class Messages
     #[ORM\JoinColumn(nullable: false)]
     private ?User $createdBy = null;
 
+    #[ORM\Column]
+    private ?bool $isRead = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $content = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->messagesImages = new ArrayCollection();
+        $this->isRead = false;
     }
 
     public function getId(): ?int
@@ -102,6 +110,30 @@ class Messages
     public function setCreatedBy(?User $createdBy): static
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function isIsRead(): ?bool
+    {
+        return $this->isRead;
+    }
+
+    public function setIsRead(bool $isRead): static
+    {
+        $this->isRead = $isRead;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(string $content): static
+    {
+        $this->content = $content;
 
         return $this;
     }
