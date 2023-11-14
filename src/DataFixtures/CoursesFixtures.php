@@ -26,6 +26,8 @@ class CoursesFixtures extends Fixture implements DependentFixtureInterface
             $courses->setDescription($faker->text(200));
             $courses->setPromo($this->getReference(PromoFixtures::PROMO_REFERENCE . $faker->numberBetween(0, 4)));
             $courses->setCreatedBy($this->getReference(UserFixtures::USER_REFERENCE . 0));
+
+            $manager->persist($courses);
         }
         $manager->flush();
     }
