@@ -25,6 +25,10 @@ class Messages
     #[ORM\OneToMany(mappedBy: 'message', targetEntity: MessagesImages::class, orphanRemoval: true)]
     private Collection $messagesImages;
 
+    #[ORM\ManyToOne(inversedBy: 'messages')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $createdBy = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -86,6 +90,18 @@ class Messages
                 $messagesImage->setMessage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }
