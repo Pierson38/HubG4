@@ -17,7 +17,7 @@ class ConversationService {
     public function createConversation(User $user, User $contact) : Conversations {
 
         if ($conversation = $this->conversationsRepository->verifConversation($contact, $user)) {
-            return $conversation->getId();
+            return $conversation;
         } else {
             $conversation = new Conversations();
             $conversation->setFromUser($user);

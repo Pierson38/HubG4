@@ -52,15 +52,15 @@
 								<p>Description :</p>
 								<p>{{course.description}}</p>
 								<p>De
-									{{course.startAt|format_datetime('short', 'short', locale="en")}}
+									{{course.startAt|format_datetime('short', 'short', locale="fr")}}
 									à
-									{{course.endAt|format_datetime('short', 'short', locale="en")}}</p>
+									{{course.endAt|format_datetime('short', 'short', locale="fr")}}</p>
 
 
 								<br>
 
 								<h3>Etudiants</h3>
-								<div>
+								                                                                                                {# <div>
 																																	{% for student in course.promo.users.values %}
 																																		<div class="d-flex justify-content-between">
 																																			<p>{{student.firstname ~ " " ~ student.lastname}}</p>
@@ -71,12 +71,12 @@
 																																			</div>
 																																		</div>
 																																	{% endfor %}
-																																</div> 
+																																</div>  #}
 								{# Faire Fichier #}
 
 								<br>
 
-								{# <div class="table-responsive">
+								<div class="table-responsive">
 									<table class="table align-middle table-nowrap table-hover">
 										<thead class="table-light">
 											<tr>
@@ -93,13 +93,11 @@
 													<td>{{student.firstname}}</td>
 													<td>{{student.lastname}}</td>
 													<td>
-														<ul class="list-inline font-size-20 contact-links mb-0">
-															<li class="list-inline-item px-2">
+														
 																<a class="font-size-20" href="{{path('app_messengers_create_converstation_user', {id: student.id})}}">
 																	<i class="bx bx-message-square-dots"></i>
 																</a>
-															</li>
-														</ul>
+															
 													</td>
 												</tr>
 											{% endfor %}
@@ -107,7 +105,7 @@
 										</tbody>
 
 									</table>
-								</div> #}
+								</div>
 
 							</div>
 						</div>
