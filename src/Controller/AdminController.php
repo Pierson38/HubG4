@@ -158,8 +158,14 @@ class AdminController extends AbstractController
     #[Route('/admin/courses/edit/{id}', name: 'app_admin_courses_edit')]
     public function adminCoursesEdit(Courses $course, EntityManagerInterface $manager, Request $request): Response
     {
+        $tags = $course->getTags();
+        $newTags = [];
+        foreach ($tags as $value) {
+            $newTags[] = ["text" => $value];
+        }
+        $course->setTags($newTags);
 
-        $form = $this->createForm(UserType::class, $course);
+        $form = $this->createForm(CoursesType::class, $course);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -178,7 +184,7 @@ class AdminController extends AbstractController
             return $this->redirectToRoute("app_admin_courses");
         }
 
-        return $this->render('admin/usersEdit.html.twig', [
+        return $this->render('admin/coursesEdit.html.twig', [
             'form' => $form->createView(),
         ]);
     }
