@@ -13,6 +13,12 @@ class LBCController extends AbstractController
     public function index(LbcRepository $lbcRepository): Response
     {
        // dd($lbcRepository->findAll());
+
+     /*   $lbc = new Lbc();
+       $lbc->setCategory("Immobilier");
+       $lbc->getCategory(); */
+
+       //product.category
         return $this->render('lbc/index.html.twig', [
             'products' => $lbcRepository->findAll()
         ]);

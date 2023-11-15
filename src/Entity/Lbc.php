@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\LbcCategoriesType;
 use App\Repository\LbcRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -37,6 +38,9 @@ class Lbc
 
     #[ORM\OneToMany(mappedBy: 'lbc', targetEntity: LbcPictures::class, orphanRemoval: true)]
     private Collection $lbcPictures;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $category = null;
 
     public function __construct()
     {
@@ -148,6 +152,18 @@ class Lbc
                 $lbcPicture->setLbc(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?string $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

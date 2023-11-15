@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Lbc;
 use App\Entity\User;
+use App\Enum\LbcCategoriesType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Service\ConversationService;
