@@ -1,0 +1,55 @@
+
+# Nom de notre workflow
+name: Déploiement Prod
+
+# Déclencheur du workflow
+on:
+  push:
+    branches: [preprod]  # Le workflow est déclenché lors d'un push sur la branche "main".
+  
+# Jobs à exécuter
+jobs:
+  deploy:
+    # Spécifie l'environnement de runner que le job va utiliser
+    runs-on: ubuntu-latest
+    
+    # Variables d'environnement utilisées dans les étapes suivantes
+    env:
+      SSHPASS: ${{ secrets.SSH_PASSWORD }}  # Mot de passe SSH pour l'authentification
+      DEPLOYMENT_PATH: ${{ secrets.DEPLOYMENT_PATH }}  # Chemin de déploiement sur le serveur distant
+      REPOSITORY_TO_CLONE: ${{ secrets.REPOSITORY_TO_CLONE }}  # URL du dépôt Git à cloner
+ 
+    # Les étapes à exécuter dans ce job
+    steps:
+      # Première étape : Check-out du code de notre dépôt GitHub
+      - uses: actions/checkout@v3
+
+      # Deuxième étape : Installation de sshpass et configuration SSH
+      - name: Configuration SSH pour déploiement
+        run: |
+          sudo apt update && sudo apt install -y sshpass  
+
+      # Troisième étape : Déploiement et configuration sur le serveur distant
+      - name: Déploiement et configuration sur le serveur
+        run: |
+          sshpass -e ssh -T -o StrictHostKeyChecking=no ${{ secrets.REMOTE_USER_BACK }}@${{ secrets.REMOTE_HOST_NAME }} << 'ENDSSH'
+            # Naviguer dans le dossier de déploiement
+            cd www
+
+            # Tentative de git pull, si échec alors git clone
+            if ! git pull; then
+              git clone ${{ secrets.REPOSITORY_TO_CLONE }}
+            fi
+            
+            # Installation et mise à jour des dépendances avec Composer
+            composer install
+            composer update
+            php bin/console cache:clear
+
+            # Copier le contenu de 'servers' dans 'public' avec rsync
+            rsync -av servers/ public/
+
+            # Commandes perso
+            npm install
+            npm run build
+          ENDSSH
