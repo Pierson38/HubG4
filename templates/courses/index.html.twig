@@ -23,7 +23,7 @@
                 <div class="page-content">
                     <div class="container-fluid">
 
-						{{ include('partials/page-title.html.twig', {pagetitle: 'Cours', title: 'Liste'}) }}
+						{{ include('partials/page-title.html.twig', {pagetitle: 'Cours', title: 'Liste des cours'}) }}
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -34,13 +34,13 @@
                                             <table class="table align-middle table-nowrap table-hover">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th scope="col">Nom</th>
-                                                        <th scope="col">De</th>
-                                                        <th scope="col">À</th>
-                                                        <th scope="col">Professeur</th>
-                                                        <th scope="col">Salle</th>
-                                                        <th scope="col">Tags</th>
-                                                        <th scope="col">Action</th>
+                                                        <th scope="col" style="font-weight: bold">Cours</th>
+                                                        <th scope="col" style="font-weight: bold">De</th>
+                                                        <th scope="col" style="font-weight: bold">À</th>
+                                                        <th scope="col" style="font-weight: bold">Intervenants</th>
+                                                        <th scope="col" style="font-weight: bold">Salle</th>
+                                                        <th scope="col" style="font-weight: bold">Catégories</th>
+                                                        <th scope="col"></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -48,7 +48,7 @@
                                                     {% for course in courses %}
                                                     <tr>
                                                         <td>
-                                                            <h5 class="font-size-14 mb-1"><a href="javascript: void(0);" class="text-dark">{{course.title}}</a></h5>
+                                                            <h5 style="font-weight: bold" class="font-size-14 mb-1"><a href="javascript: void(0);" class="text-dark">{{course.title}}</a></h5>
                                                         </td>
                                                         <td>{{course.startAt|format_datetime('short', 'short', locale="fr")}}</td>
                                                         <td>{{course.endAt|format_datetime('short', 'short', locale="fr")}}</td>
