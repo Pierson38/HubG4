@@ -66,6 +66,14 @@
                                                                 <li class="list-inline-item px-2">
                                                                     <a href="{{path("app_courses_single", {id: course.id})}}" title="Voir"><i class="bx bx-search"></i></a>
                                                                 </li>
+                                                                {% if is_granted('ROLE_COP') or course.professor == app.user %}
+                                                                <li class="list-inline-item px-2">
+                                                                    <a href="{{path("app_courses_edit", {id: course.id})}}" title="Modifier"><i class="bx bx-pencil"></i></a>
+                                                                </li>
+                                                                <li class="list-inline-item px-2">
+                                                                    <a href="{{path("app_courses_delete", {id: course.id})}}" title="Supprimer"><i class="bx bx-trash"></i></a>
+                                                                </li>
+                                                                {% endif %}
                                                             </ul>
                                                         </td>
                                                     </tr>
