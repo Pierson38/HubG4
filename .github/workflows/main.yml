@@ -54,7 +54,6 @@ jobs:
             # Commandes perso
             npm install
             npm run build
-            rm migrations/*
             php bin/console make:migration
             php bin/console d:m:m
 
