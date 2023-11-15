@@ -1,81 +1,151 @@
 {{ include('partials/main.html.twig') }}
 
-    <head>
-        
-        {{ include('partials/title-meta.html.twig', {title: 'Cours - ' ~ course.title}) }}
+<head>
 
-        {{ include('partials/head-css.html.twig') }}
+	{{ include('partials/title-meta.html.twig', {title: 'Cours - ' ~ course.title}) }}
 
-    </head>
+	{{ include('partials/head-css.html.twig') }}
 
-    {{ include('partials/body.html.twig') }}
+</head>
 
-        <!-- Begin page -->
-        <div id="layout-wrapper">
+{{ include('partials/body.html.twig') }}
 
-            {{ include('partials/menu.html.twig') }}
+<!-- Begin page -->
+<div id="layout-wrapper">
 
-            <!-- ============================================================== -->
-            <!-- Start right Content here -->
-            <!-- ============================================================== -->
-            <div class="main-content">
+	{{ include('partials/menu.html.twig') }}
 
-                <div class="page-content">
-                    <div class="container-fluid">
+	<!-- ============================================================== -->
+	<!-- Start right Content here -->
+	<!-- ============================================================== -->
+		<div class="main-content"> <div class="page-content">
+			<div
+				class="container-fluid">
 
-						{{ include('partials/page-title.html.twig', {pagetitle: 'Cours', title: course.title}) }}
+				{# {{ include('partials/page-title.html.twig', {pagetitle: 'Cours', title: course.title}) }} #}
 
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h1>{{course.title}}</h1>
-                                        <p>{{course.description}}</p>
-                                        <p>De {{course.startAt|format_datetime('short', 'short', locale="fr")}} à {{course.endAt|format_datetime('short', 'short', locale="fr")}}</p>
-                                        <p>À {{course.endAt|format_datetime('short', 'short', locale="fr")}} à {{course.endAt|format_datetime('short', 'short', locale="fr")}}</p>
-                                        <p>Professeur : {{course.professor.firstname ~ " " ~ course.professor.lastname}}</p>
-                                        <p>Salle : {{course.classroom}}</p>
-                                        <p>Tags : 
-                                            {% for tag in course.tags %}
-                                            <a href="javascript: void(0);" class="badge badge-soft-primary font-size-11 m-1">{{tag}}</a>
-                                            {% endfor %}
-                                        </p>
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="card">
+							<div class="card-body">
 
-                                        <h3>Eleves</h3>
-                                        <div>
-                                            {% for student in course.promo.users.values %}
-                                            <div class="d-flex justify-content-between">
-                                                <p>{{student.firstname ~ " " ~ student.lastname}}</p>
-                                                <div>
-                                                    <a class="font-size-20" href="{{path('app_messengers_create_converstation_user', {id: student.id})}}"><i class="bx bx-message-square-dots"></i></a>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
-                                        </div>
-                                        {# Faire Fichier #}
+								<div class="course-container">
+									<h1>{{course.title}}</h1>
 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- container-fluid -->
-                </div>
-                <!-- End Page-content -->
 
-                
-                {{ include('partials/footer.html.twig') }}
-            </div>
-            <!-- end main content-->
+									<p>
+										{% for tag in course.tags %}
+											<a href="javascript: void(0);" class="badge badge-soft-primary font-size-11 m-1">{{tag}}</a>
+										{% endfor %}
+									</p>
 
-        </div>
-        <!-- END layout-wrapper -->
+								</div>
 
-        {{ include('partials/right-sidebar.html.twig') }}
+								<br>
 
-        {{ include('partials/vendor-scripts.html.twig') }}
-        
-        <!-- App js -->
-        <script src="/js/app.js"></script>
+								<p>Intervenants :
+									{{course.professor.firstname ~ " " ~ course.professor.lastname}}</p>
 
-    </body>
-</html>
+								<p>Salle :
+									{{course.classroom}}</p>
+
+								<p>Description :</p>
+								<p>{{course.description}}</p>
+								<p>De
+									{{course.startAt|format_datetime('short', 'short', locale="en")}}
+									à
+									{{course.endAt|format_datetime('short', 'short', locale="en")}}</p>
+
+
+								<br>
+
+								<h3>Etudiants</h3>
+								<div>
+																																	{% for student in course.promo.users.values %}
+																																		<div class="d-flex justify-content-between">
+																																			<p>{{student.firstname ~ " " ~ student.lastname}}</p>
+																																			<div>
+																																				<a class="font-size-20" href="{{path('app_messengers_create_converstation_user', {id: student.id})}}">
+																																					<i class="bx bx-message-square-dots"></i>
+																																				</a>
+																																			</div>
+																																		</div>
+																																	{% endfor %}
+																																</div> 
+								{# Faire Fichier #}
+
+								<br>
+
+								{# <div class="table-responsive">
+									<table class="table align-middle table-nowrap table-hover">
+										<thead class="table-light">
+											<tr>
+												<th scope="col" style="font-weight: bold">Prénom</th>
+												<th scope="col" style="font-weight: bold">Nom</th>
+												<th scope="col" style="font-weight: bold">Message</th>
+											</tr>
+										</thead>
+
+										<tbody>
+
+											{% for student in course.promo.users.values %}
+												<tr>
+													<td>{{student.firstname}}</td>
+													<td>{{student.lastname}}</td>
+													<td>
+														<ul class="list-inline font-size-20 contact-links mb-0">
+															<li class="list-inline-item px-2">
+																<a class="font-size-20" href="{{path('app_messengers_create_converstation_user', {id: student.id})}}">
+																	<i class="bx bx-message-square-dots"></i>
+																</a>
+															</li>
+														</ul>
+													</td>
+												</tr>
+											{% endfor %}
+
+										</tbody>
+
+									</table>
+								</div> #}
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+			<!-- container-fluid -->
+		</div>
+
+
+		<!-- End Page-content -->
+
+
+		{{ include('partials/footer.html.twig') }}
+	</div>
+
+	<!-- end main content-->
+
+</div>
+<!-- END layout-wrapper -->
+
+{{ include('partials/right-sidebar.html.twig') }}
+
+{{ include('partials/vendor-scripts.html.twig') }}
+
+<!-- Script -->
+<style>
+	.course-container {
+		display: flex;
+		align-items: center;
+	}
+
+	h1 {
+		margin-right: 20px;
+	}
+</style>
+
+<!-- App js -->
+<script src="/js/app.js"></script></body></html>
