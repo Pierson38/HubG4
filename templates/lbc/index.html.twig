@@ -1,0 +1,126 @@
+{{ include('partials/main.html.twig') }}
+
+    <head>
+        
+        {{ include('partials/title-meta.html.twig', {title: 'Products'}) }}
+
+        <!-- ION Slider -->
+        <link href="/libs/ion-rangeslider/css/ion.rangeSlider.min.css" rel="stylesheet" type="text/css"/>
+
+        {{ include('partials/head-css.html.twig') }}
+
+    </head>
+
+    {{ include('partials/body.html.twig') }}
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            {{ include('partials/menu.html.twig') }}
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+                        {{ include('partials/page-title.html.twig', {pagetitle: 'Ecommerce', title: 'Products'}) }}
+
+                        <div class="row">
+                            <div class="col-lg-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title mb-4">Filter</h4>
+
+                                        <div>
+                                            <ul class="list-unstyled product-list">
+                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i>Informatique</a></li>
+                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Appartement</a></li>
+                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Mobilier</a></li>
+                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Transport</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-9">
+                                    
+                                <div class="row mb-3">
+                                    <div class="col-xl-4 col-sm-6">
+                                        <div class="mt-2">
+                                            <h5>All</h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-sm-6">
+                                        <form class="mt-4 mt-sm-0 float-sm-end d-sm-flex align-items-center">
+                                            <div class="search-box me-2">
+                                                <div class="position-relative">
+                                                    <input type="text" class="form-control border-0" placeholder="Search...">
+                                                    <i class="bx bx-search-alt search-icon"></i>
+                                                </div>
+                                            </div>
+                                            <ul class="nav nav-pills product-view-nav justify-content-end mt-3 mt-sm-0">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" href="#"><i class="bx bx-grid-alt"></i></a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="#"><i class="bx bx-list-ul"></i></a>
+                                                </li>
+                                            </ul>
+                                            
+                                            
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="row">
+                            
+                                    {% for product in products %}
+                                        <div class="col-xl-4 col-sm-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="product-img position-relative">
+                                                    <img src="/images/product/img-1.png" alt="" class="img-fluid mx-auto d-block">
+                                                </div>
+                                                <div class="mt-4 text-center">
+                                                    <h5 class="mb-3 text-truncate"><a href="javascript: void(0);" class="text-dark">{{product.title}} </a></h5>
+                                                    <h5 class="my-0"><span class="text-muted me-2"></span> {{product.price}}</h5>
+                                                     <p>{{product.description}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+
+        <!-- Ion Range Slider-->
+        <script src="/libs/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
+
+        <!-- init js -->
+        <script src="/js/pages/product-filter-range.init.js"></script>
+
+        <!-- App js -->
+        <script src="/js/app.js"></script>
+
+    </body>
+</html>
