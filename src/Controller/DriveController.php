@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Folder;
 use App\Repository\FolderRepository;
 use App\Repository\UserRepository;
 use App\Service\FileService;
@@ -33,20 +34,37 @@ class DriveController extends AbstractController
 
         return $this->render('drive/index.html.twig', [
             'folders' => $folders,
+            'hub' => true
         ]);
     }
 
+    #[Route('/drive/{id}', name: 'app_drive_folder')]
+    public function folder(Folder $folder): Response
+    {
+        $user = $this->getUserFromInterface();
+
+        $folders = $folder->getChildren()->getValues();
+        // dd($folders);
+
+
+        return $this->render('drive/index.html.twig', [
+            'folderBase' => $folder,
+            'folders' => $folders,
+            'hub' => false
+        ]);
+    }
+/* 
     #[Route('/create-drive', name: 'app_create_drive')]
     public function createDrive(FileService $fileService): Response
     {
         $user = $this->getUserFromInterface();
         $promo = $user->getPromo();
 
-        // $fileService->createPersonalRepository($user);
-        $fileService->createPromoRepository($promo);
+        $fileService->createPersonalRepository($user);
+        // $fileService->createPromoRepository($promo);
 
 
         return $this->redirectToRoute('app_drive');
-    }
+    } */
     
 }
