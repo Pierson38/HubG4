@@ -42,6 +42,11 @@ class Folder
 
     private int $filesCount = 0;
 
+    private string $weight = "";
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $path = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -214,6 +219,30 @@ class Folder
     public function setFilesCount(int $count): static
     {
         $this->filesCount = $count;
+
+        return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setPath(string $path): static
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    public function getWeight(): ?string
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(string $weight): static
+    {
+        $this->weight = $weight;
 
         return $this;
     }

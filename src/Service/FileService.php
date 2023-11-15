@@ -30,6 +30,40 @@ class FileService {
         
     }
 
+    private function formatSizeUnits($bytes) {
+        if ($bytes >= 1073741824) {
+            $bytes = number_format($bytes / 1073741824, 2) . ' Go';
+        } elseif ($bytes >= 1048576) {
+            $bytes = number_format($bytes / 1048576, 2) . ' Mo';
+        } elseif ($bytes >= 1024) {
+            $bytes = number_format($bytes / 1024, 2) . ' Ko';
+        } elseif ($bytes > 1) {
+            $bytes = $bytes . ' octets';
+        } elseif ($bytes == 1) {
+            $bytes = $bytes . ' octet';
+        } else {
+            $bytes = '0 octet';
+        }
+    
+        return $bytes;
+    }
+
+    public function getWeightOfFilesFolder(Folder $folder) {
+
+
+        $path = $folder->getPath();
+        $totalSize = 0;
+        $files = scandir($path);
+
+        foreach ($files as $file) {
+            if (is_file($path . '/' . $file)) {
+                $totalSize += filesize($path . '/' . $file);
+            }
+        }
+
+        return $this->formatSizeUnits($totalSize);
+    }
+
     public function createPersonalRepository(User $user) {
 
         $folder = new Folder();
@@ -46,12 +80,19 @@ class FileService {
         $permissions->setIsDeletable(false);
         $this->manager->persist($permissions);
 
-        $path = $this->appKernel->getProjectDir() . '/public/uploads/drive/personals/' . $user->getId();
+        $this->manager->flush();
+
+        $path = $this->appKernel->getProjectDir() . '/public/uploads/drive/personals/' . $folder->getId();
+        $folder->setPath($path);
+
+        $this->manager->persist($folder);
+        $this->manager->flush();
+
         if (!$this->fileSystem->exists($path)) {
             $this->fileSystem->mkdir($path, 0777, true);
         }
 
-        $this->manager->flush();
+       
     }
 
     public function removePersonalRepository(User $user) {
@@ -79,13 +120,17 @@ class FileService {
         $permissions->setIsDeletable(false);
         $this->manager->persist($permissions);
 
+        $this->manager->flush();
         
-        $path = $this->appKernel->getProjectDir() . '/public/uploads/drive/promos/' . $promo->getId();
+        $path = $this->appKernel->getProjectDir() . '/public/uploads/drive/promos/' . $folder->getId();
+        $folder->setPath($path);
+
+        $this->manager->persist($folder);
+        $this->manager->flush();
         if (!$this->fileSystem->exists($path)) {
             $this->fileSystem->mkdir($path, 0777, true);
         }
         
-        $this->manager->flush();
 
     }
 
