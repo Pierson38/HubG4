@@ -19,7 +19,7 @@ class Folder
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'folders')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $createdBy = null;
 
     #[ORM\Column]
@@ -39,6 +39,8 @@ class Folder
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $children;
+
+    private int $filesCount = 0;
 
     public function __construct()
     {
@@ -200,6 +202,18 @@ class Folder
                 $child->setParent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFilesCount(): int
+    {
+        return $this->filesCount;
+    }
+
+    public function setFilesCount(int $count): static
+    {
+        $this->filesCount = $count;
 
         return $this;
     }

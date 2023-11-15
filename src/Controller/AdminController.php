@@ -12,6 +12,7 @@ use App\Repository\CoursesRepository;
 use App\Repository\PromoRepository;
 use App\Repository\UserRepository;
 use App\Service\ConversationService;
+use App\Service\FileService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +51,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/users/create', name: 'app_admin_users_create')]
-    public function adminUsersCreate(EntityManagerInterface $manager, Request $request, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function adminUsersCreate(EntityManagerInterface $manager, Request $request, UserPasswordHasherInterface $userPasswordHasher, FileService $fileService): Response
     {
 
         $form = $this->createForm(UserType::class);
@@ -69,6 +70,8 @@ class AdminController extends AbstractController
 
             $manager->persist($user);
             $manager->flush();
+
+            $fileService->createPersonalRepository($user);
 
             $this->addFlash("success", "L'utilisateur a bien été créé");
             return $this->redirectToRoute("app_admin_users");
@@ -102,13 +105,14 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/users/delete/{id}', name: 'app_admin_users_delete')]
-    public function adminUsersDelete(User $user, EntityManagerInterface $manager): Response
+    public function adminUsersDelete(User $user, EntityManagerInterface $manager, FileService $fileService): Response
     {
         if ($user == $this->getUserFromInterface()) {
             $this->addFlash("error", "Vous ne pouvez pas supprimer votre compte");
             return $this->redirectToRoute("app_admin_users");
         }
 
+        $fileService->removePersonalRepository($user);
         $manager->remove($user);
         $manager->flush();
         $this->addFlash("success", "L'utilisateur a bien été supprimé");
@@ -210,7 +214,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/promos/create', name: 'app_admin_promos_create')]
-    public function adminPromosCreate(EntityManagerInterface $manager, Request $request): Response
+    public function adminPromosCreate(EntityManagerInterface $manager, Request $request, FileService $fileService): Response
     {
 
         $form = $this->createForm(PromosType::class);
@@ -222,6 +226,8 @@ class AdminController extends AbstractController
 
             $manager->persist($promo);
             $manager->flush();
+
+            $fileService->createPromoRepository($promo);
 
             $this->addFlash("success", "La promo a bien été créé");
             return $this->redirectToRoute("app_admin_promos");
@@ -254,8 +260,9 @@ class AdminController extends AbstractController
     }
 
     #[Route('/admin/promos/delete/{id}', name: 'app_admin_promos_delete')]
-    public function adminPromosDelete(Promo $promo, EntityManagerInterface $manager): Response
+    public function adminPromosDelete(Promo $promo, EntityManagerInterface $manager, FileService $fileService): Response
     {
+        $fileService->removePromoRepository($promo);
         $manager->remove($promo);
         $manager->flush();
         $this->addFlash("success", "La promo a bien été supprimé");
