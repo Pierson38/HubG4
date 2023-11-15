@@ -2,7 +2,7 @@
 
 	<head>
 
-		{{ include('partials/title-meta.html.twig', {title: 'Admin - Créer un cours'}) }}
+		{{ include('partials/title-meta.html.twig', {title: 'Cours - Créer un cours'}) }}
 
 		{{ include('partials/head-css.html.twig') }}
 
@@ -23,7 +23,7 @@
 				<div class="page-content">
 					<div class="container-fluid">
 
-						{{ include('partials/page-title.html.twig', {pagetitle: 'Admin', title: 'Créer un cours'}) }}
+						{{ include('partials/page-title.html.twig', {pagetitle: 'Cours', title: 'Créer un cours'}) }}
 
 						<div class="row">
 							<div class="col-xl-12">
@@ -46,7 +46,6 @@
 								
 									<button type="button" class="btn btn-secondary" id="add_sub_element">Ajouter un élément</button>
 									{{ form_row(form.description) }}
-									{{ form_row(form.professor) }}
 									{{ form_row(form.promo) }}
 									<button type="submit" class="btn btn-primary mt-4">Créer</button>
 									{{ form_end(form) }}
