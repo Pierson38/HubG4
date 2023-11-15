@@ -9,16 +9,17 @@
 </head>
 
 {% block body %}
+<body style="background: #2a3042" class="overflow-hidden">
 	<div class="account-pages my-5 pt-sm-5">
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-8 col-lg-6 col-xl-5">
-					<div class="card overflow-hidden">
-						<div class="bg-primary bg-soft">
+					<div class="card overflow-hidden" style="border-radius: 0.6rem">
+						<div style="background: linear-gradient(to right,#54519F,#716eb5)">
 							<div class="row">
 								<div class="col-7">
 									<div class="text-primary p-4">
-										<h5 class="text-primary">Réinitialisez votre mot de passe</h5>
+										<h5 class="text-white">Réinitialisez votre mot de passe</h5>
 									</div>
 								</div>
 								<div class="col-5 align-self-end">
@@ -28,27 +29,19 @@
 						</div>
 						<div class="card-body pt-0">
 							<div class="auth-logo">
-								<a href="{{ path('home') }}" class="auth-logo-light">
+								<a href="{{ path('home') }}">
 									<div class="avatar-md profile-user-wid mb-4">
-										<span class="avatar-title rounded-circle bg-light">
-											<img src="/images/logo-light.svg" alt="" class="rounded-circle" height="34">
-										</span>
-									</div>
-								</a>
-
-								<a href="{{ path('home') }}" class="auth-logo-dark">
-									<div class="avatar-md profile-user-wid mb-4">
-										<span class="avatar-title rounded-circle bg-light">
-											<img src="/images/logo.svg" alt="" class="rounded-circle" height="34">
+										<span class="avatar-title rounded-circle bg-light" style="background: linear-gradient(to right,#54519F,#716eb5); border: 0.1rem solid">
+											<img src="/images/hubG4_S.png" alt="" height="34">
 										</span>
 									</div>
 								</a>
 							</div>
-							<div class="p-2">
+							<div class="px-1 pb-1">
 
 								{{ form_start(resetForm) }}
 								{{ form_row(resetForm.plainPassword) }}
-								<button class="btn btn-primary">Réinitialiser</button>
+								<button class="btn waves-effect waves-light text-white" style="background: linear-gradient(to right,#54519F,#716eb5)">Réinitialiser</button>
 								{{ form_end(resetForm) }}
 
 							</div>
@@ -65,6 +58,7 @@
 
 		<!-- App js -->
 		<script src="/js/app.js"></script>
+	</body>
 	{% endblock %}
 
 </html>

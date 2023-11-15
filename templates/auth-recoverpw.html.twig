@@ -7,13 +7,13 @@
 	{{ include('partials/head-css.html.twig') }}
 </head>
 
-<body>
+<body style="background: #2a3042" class="overflow-hidden">
 	<div class="account-pages my-5 pt-sm-5">
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-8 col-lg-6 col-xl-5">
-					<div class="card overflow-hidden">
-						<div class="bg-primary bg-soft">
+					<div class="card overflow-hidden" style="border-radius: 0.6rem">
+						<div style="background: linear-gradient(to right,#54519F,#716eb5)">
 							<div class="row">
 								<div class="col-7">
 									<div class="text-primary p-4">
@@ -22,7 +22,7 @@
 											<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
 										{% endfor %}
 
-										<h5 class="text-primary">
+										<h5 class="text-white">
 											Réinitialisez votre mot de passe</h5>
 									</div>
 								</div>
@@ -35,32 +35,29 @@
 							<div>
 								<a href="{{ path('home') }}">
 									<div class="avatar-md profile-user-wid mb-4">
-										<span class="avatar-title rounded-circle bg-light">
-											<img src="/images/logo.svg" alt="" class="rounded-circle" height="34">
+										<span class="avatar-title rounded-circle" style="background: linear-gradient(to right,#54519F,#716eb5); border: 0.1rem solid">
+											<img src="/images/hubG4_S.png" alt="" height="34">
 										</span>
 									</div>
 								</a>
 							</div>
 
-							<div class="p-2">
-								<div class="alert alert-success text-center mb-4" role="alert">
-									Entrez votre email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
-								</div>
-
-									{{ form_start(requestForm) }}
+							<div class="px-1 pb-1">
+								{{ form_start(requestForm) }}
                                     
-									{{ form_row(requestForm.email) }}
+                                    {{ form_row(requestForm.email) }}
 
-									<div class="text-end">
-										<button class="btn btn-primary w-md waves-effect waves-light" type="submit">Réinitialiser</button>
-									</div>
+                                    <div class="alert alert-success text-center text-black" role="alert">
+                                        Entrez votre email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                                    </div>
+                                    <button class="btn text-white w-md waves-effect waves-light" type="submit" style="background: linear-gradient(to right,#54519F,#716eb5)">Réinitialiser</button>
 
-									{{ form_end(requestForm) }}
+								{{ form_end(requestForm) }}
 							</div>
 
 						</div>
 					</div>
-					<div class="mt-5 text-center">
+					<div class="mt-5 text-center text-white">
 						<p>Vous souhaitez vous connecté ?
 							<a href="login" class="fw-medium text-primary">
 								C'est par ici !</a>
