@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Courses;
 use App\Entity\User;
+use App\Form\CoursesType;
 use App\Form\UserType;
+use App\Repository\CoursesRepository;
+use App\Repository\PromoRepository;
 use App\Repository\UserRepository;
 use App\Service\ConversationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -107,5 +111,84 @@ class AdminController extends AbstractController
         $manager->flush();
         $this->addFlash("success", "L'utilisateur a bien été supprimé");
         return $this->redirectToRoute("app_admin_users");
+    }
+
+    #[Route('/admin/courses', name: 'app_admin_courses')]
+    public function adminCourses(CoursesRepository $coursesRepository, PromoRepository $promoRepository): Response
+    {
+        $promos = $promoRepository->findAll();
+        $courses = $coursesRepository->findAll();
+        // dd($courses);
+        return $this->render('admin/courses.html.twig', [
+            'courses' => $courses,
+            'promos' => $promos,
+        ]);
+    }
+
+    #[Route('/admin/courses/create', name: 'app_admin_courses_create')]
+    public function adminCoursesCreate(EntityManagerInterface $manager, Request $request, UserPasswordHasherInterface $userPasswordHasher): Response
+    {
+
+        $form = $this->createForm(CoursesType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $course = $form->getData();
+            $tags = $course->getTags();
+            $newTags = [];
+            foreach ($tags as $value) {
+                $newTags[] = $value["text"];
+            }
+            $course->setTags($newTags);
+            $course->setCreatedBy($this->getUserFromInterface());
+
+            $manager->persist($course);
+            $manager->flush();
+
+            $this->addFlash("success", "Le cours a bien été créé");
+            return $this->redirectToRoute("app_admin_courses");
+        }
+
+        return $this->render('admin/coursesCreate.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/admin/courses/edit/{id}', name: 'app_admin_courses_edit')]
+    public function adminCoursesEdit(Courses $course, EntityManagerInterface $manager, Request $request): Response
+    {
+
+        $form = $this->createForm(UserType::class, $course);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $course = $form->getData();
+            $tags = $course->getTags();
+            $newTags = [];
+            foreach ($tags as $value) {
+                $newTags[] = $value["text"];
+            }
+            $course->setTags($newTags);
+            $manager->persist($course);
+            $manager->flush();
+
+            $this->addFlash("success", "Le cours a bien été modifié");
+            return $this->redirectToRoute("app_admin_courses");
+        }
+
+        return $this->render('admin/usersEdit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/admin/courses/delete/{id}', name: 'app_admin_courses_delete')]
+    public function adminCoursesDelete(Courses $courses, EntityManagerInterface $manager): Response
+    {
+        $manager->remove($courses);
+        $manager->flush();
+        $this->addFlash("success", "Le cours a bien été supprimé");
+        return $this->redirectToRoute("app_admin_courses");
     }
 }
