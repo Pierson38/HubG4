@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Courses;
+use App\Entity\Promo;
 use App\Entity\User;
 use App\Form\CoursesType;
+use App\Form\PromosType;
 use App\Form\UserType;
 use App\Repository\CoursesRepository;
 use App\Repository\PromoRepository;
@@ -196,5 +198,67 @@ class AdminController extends AbstractController
         $manager->flush();
         $this->addFlash("success", "Le cours a bien été supprimé");
         return $this->redirectToRoute("app_admin_courses");
+    }
+
+    #[Route('/admin/promos', name: 'app_admin_promos')]
+    public function adminPromos(PromoRepository $promoRepository): Response
+    {
+        $promos = $promoRepository->findAll();
+        return $this->render('admin/promos.html.twig', [
+            'promos' => $promos,
+        ]);
+    }
+
+    #[Route('/admin/promos/create', name: 'app_admin_promos_create')]
+    public function adminPromosCreate(EntityManagerInterface $manager, Request $request): Response
+    {
+
+        $form = $this->createForm(PromosType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $promo = $form->getData();
+
+            $manager->persist($promo);
+            $manager->flush();
+
+            $this->addFlash("success", "La promo a bien été créé");
+            return $this->redirectToRoute("app_admin_promos");
+        }
+
+        return $this->render('admin/promosCreate.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/admin/promos/edit/{id}', name: 'app_admin_promos_edit')]
+    public function adminPromosEdit(Promo $promo, EntityManagerInterface $manager, Request $request): Response
+    {
+        $form = $this->createForm(PromosType::class, $promo);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $promo = $form->getData();
+            $manager->persist($promo);
+            $manager->flush();
+
+            $this->addFlash("success", "La promo a bien été modifié");
+            return $this->redirectToRoute("app_admin_promos");
+        }
+
+        return $this->render('admin/promosEdit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/admin/promos/delete/{id}', name: 'app_admin_promos_delete')]
+    public function adminPromosDelete(Promo $promo, EntityManagerInterface $manager): Response
+    {
+        $manager->remove($promo);
+        $manager->flush();
+        $this->addFlash("success", "La promo a bien été supprimé");
+        return $this->redirectToRoute("app_admin_promos");
     }
 }
