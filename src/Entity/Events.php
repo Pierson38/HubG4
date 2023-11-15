@@ -41,7 +41,7 @@ class Events
     private ?string $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $createdBy = null;
 
     #[ORM\Column]

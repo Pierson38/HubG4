@@ -17,7 +17,7 @@ class LbcPictures
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'lbcPictures')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Lbc $lbc = null;
 
     #[ORM\Column]

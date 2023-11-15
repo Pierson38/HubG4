@@ -23,7 +23,7 @@ class Posts
     private ?string $content = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $createdBy = null;
 
     #[ORM\Column]
@@ -36,7 +36,7 @@ class Posts
     private Collection $postsImages;
 
     #[ORM\ManyToOne(inversedBy: 'posts')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?PostsCategories $category = null;
 
     #[ORM\OneToMany(mappedBy: 'post', targetEntity: PostsReport::class)]

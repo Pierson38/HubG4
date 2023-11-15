@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Repository\ConversationsRepository;
 use App\Repository\MessagesRepository;
 use App\Repository\UserRepository;
+use App\Service\ConversationService;
 use App\Service\FileService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -213,27 +214,15 @@ class MessagerieController extends AbstractController
 
 
 
-    #[Security("is_granted('IS_AUTHENTICATED_FULLY')")]
     #[Route('/create-conversation/{id}', name: 'app_messengers_create_converstation_user')]
-    public function createConversationUser(User $user, EntityManagerInterface $manager, ConversationsRepository $conversationsRepository): Response
+    public function createConversationUser(User $contact, ConversationService $conversationService): Response
     {
-
-
-        if ($user == $this->getUser()) {
-            $this->addFlash('error', "Vous ne pouvez pas créer de discution avec vous même");
-            return $this->redirectToRoute('app_homepage');
+        if ($contact == $this->getUserFromInterface()) {
+            $this->addFlash('error', "Vous ne pouvez pas vous envoyer de message à vous même");
+            return $this->redirectToRoute('app_messagerie');
         }
-        if ($conversation = $conversationsRepository->verifConversation($user, $this->getUserFromInterface())) {
-            return $this->redirectToRoute('app_messengers_solo', ['id' => $conversation->getId()]);
-        } else {
-            $conversation = new Conversations();
-            $conversation->setFromUser($user);
-            $conversation->setToUser($this->getUser());
 
-            $manager->persist($conversation);
-            $manager->flush();
-
-            return $this->redirectToRoute('app_messengers_solo', ['id' => $conversation->getId()]);
-        }
+        $conversation = $conversationService->createConversation($this->getUserFromInterface(), $contact);
+        return $this->redirectToRoute('app_messengers_solo', ['id' => $conversation->getId()]);
     }
 }

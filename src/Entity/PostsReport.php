@@ -17,11 +17,11 @@ class PostsReport
     private ?string $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'postsReports')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $reportedBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'postsReports')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Posts $post = null;
 
     #[ORM\ManyToOne(inversedBy: 'postsReports')]

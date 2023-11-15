@@ -14,13 +14,14 @@ class Permissions
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'permissions')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?User $user = null;
 
     #[ORM\ManyToOne(inversedBy: 'permissions')]
     private ?Promo $promo = null;
 
     #[ORM\ManyToOne(inversedBy: 'permissions')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Folder $folder = null;
 
     #[ORM\Column]

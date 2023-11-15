@@ -21,15 +21,15 @@ class HomeController extends AbstractController
         return $this->render('index.html.twig');
     }
 
-   /*  #[Route('/{path}')]
-    public function root($path)
-    {
-        if ($this->loader->exists($path.'.html.twig')) {
-            if ($path == '/' || $path == 'home') {
-                die('Home');
-            }
-            return $this->render($path.'.html.twig');
-        }
-        throw $this->createNotFoundException('The Requested Page Not Found.');
-    } */
+    // #[Route('/{path}')]
+    // public function root($path)
+    // {
+    //     if ($this->loader->exists($path.'.html.twig')) {
+    //         if ($path == '/' || $path == 'home') {
+    //             die('Home');
+    //         }
+    //         return $this->render($path.'.html.twig');
+    //     }
+    //     throw $this->createNotFoundException('The Requested Page Not Found.');
+    // }
 }

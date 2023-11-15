@@ -26,7 +26,7 @@ class Lbc
     private ?int $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'lbcs')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $createdBy = null;
 
     #[ORM\Column]

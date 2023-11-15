@@ -20,7 +20,7 @@ class PostsComments
     private ?string $content = null;
 
     #[ORM\ManyToOne(inversedBy: 'postsComments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $createdBy = null;
 
     #[ORM\Column]
@@ -33,7 +33,7 @@ class PostsComments
     private Collection $postsReports;
 
     #[ORM\ManyToOne(inversedBy: 'postsComments')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Posts $post = null;
 
     public function __construct()
