@@ -24,7 +24,7 @@ class EventsFixtures extends Fixture implements DependentFixtureInterface
             $event->setStartAt(new \DateTimeImmutable($date->format('Y-m-d H:i:s')));
             $event->setEndAt(new \DateTimeImmutable($date->modify('+2 hours')->format('Y-m-d H:i:s')));
             $event->setCreatedBy($this->getReference(UserFixtures::USER_REFERENCE . 0));
-            $event->setType($faker->randomElement(['sport', 'culture', 'food', 'party', 'other']));
+            $event->setType($faker->randomElement(['bde', 'cop']));
 
             $manager->persist($event);
         }

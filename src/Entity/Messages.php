@@ -21,13 +21,9 @@ class Messages
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Conversations $conversation = null;
-
-
+    
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\OneToMany(mappedBy: 'message', targetEntity: MessagesImages::class, orphanRemoval: true)]
-    private Collection $messagesImages;
 
     #[ORM\ManyToOne(inversedBy: 'messages')]
     #[ORM\JoinColumn(nullable: false)]
@@ -39,10 +35,12 @@ class Messages
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
+    #[ORM\OneToOne(mappedBy: 'message', cascade: ['persist', 'remove'])]
+    private ?MessagesImages $messagesImages = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
-        $this->messagesImages = new ArrayCollection();
         $this->isRead = false;
     }
 
@@ -71,36 +69,6 @@ class Messages
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, MessagesImages>
-     */
-    public function getMessagesImages(): Collection
-    {
-        return $this->messagesImages;
-    }
-
-    public function addMessagesImage(MessagesImages $messagesImage): static
-    {
-        if (!$this->messagesImages->contains($messagesImage)) {
-            $this->messagesImages->add($messagesImage);
-            $messagesImage->setMessage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMessagesImage(MessagesImages $messagesImage): static
-    {
-        if ($this->messagesImages->removeElement($messagesImage)) {
-            // set the owning side to null (unless already changed)
-            if ($messagesImage->getMessage() === $this) {
-                $messagesImage->setMessage(null);
-            }
-        }
 
         return $this;
     }
@@ -137,6 +105,23 @@ class Messages
     public function setContent(string $content): static
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getMessagesImages(): ?MessagesImages
+    {
+        return $this->messagesImages;
+    }
+
+    public function setMessagesImages(MessagesImages $messagesImages): static
+    {
+        // set the owning side of the relation if necessary
+        if ($messagesImages->getMessage() !== $this) {
+            $messagesImages->setMessage($this);
+        }
+
+        $this->messagesImages = $messagesImages;
 
         return $this;
     }

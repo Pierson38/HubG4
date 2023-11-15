@@ -1,0 +1,203 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+  {{
+    include('partials/title-meta.html.twig', {title: 'Calendrier'})
+  }}
+
+  <link rel="stylesheet" type="text/css" href="/libs/tui-time-picker/tui-time-picker.min.css" />
+  <link rel="stylesheet" type="text/css" href="/libs/tui-date-picker/tui-date-picker.min.css" />
+  <link href="/libs/tui-calendar/tui-calendar.min.css" rel="stylesheet" type="text/css" />
+
+  {{
+    include('partials/head-css.html.twig')
+  }}
+</head>
+
+<body data-sidebar="dark">
+  <!-- Begin page -->
+  <div id="layout-wrapper">
+    {{ include('partials/menu.html.twig') }}
+
+    <style>
+      .tui-full-calendar-weekday-schedule {
+        height: auto !important;
+      }
+    </style>
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="main-content admin">
+      <div class="page-content">
+        <div class="container-fluid">
+          {{ include('partials/page-title.html.twig', {pagetitle: 'Dashboards', title: 'Calendrier'}) }}
+
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="card">
+                <div class="card-body">
+                  <div id="lnb">
+                    <div id="right">
+                      <div id="menu" class="mb-3">
+                        <span id="menu-navi" class="d-sm-flex flex-wrap text-center text-sm-start justify-content-sm-between">
+                          <div class="d-sm-flex flex-wrap gap-1">
+                            <div class="btn-group mb-2" role="group" aria-label="Basic example">
+                              <button type="button" class="btn btn-primary move-day tui-calendar-btn-prev" data-action="move-prev">
+                                <i class="calendar-icon ic-arrow-line-left mdi mdi-chevron-left" data-action="move-prev"></i>
+                              </button>
+                              <button type="button" class="btn btn-primary move-day tui-calendar-btn-next" data-action="move-next">
+                                <i class="calendar-icon ic-arrow-line-right mdi mdi-chevron-right" data-action="move-next"></i>
+                              </button>
+                            </div>
+                          </div>
+
+                          <h4 id="renderRange" class="render-range fw-bold pt-1 mx-3"></h4>
+
+                          <div class="dropdown align-self-start mt-3 mt-sm-0 mb-2">
+                            <button id="dropdownMenu-calendarType" class="btn btn-primary" type="button" data-bs-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="true">
+                                <i id="calendarTypeIcon" class="calendar-icon ic_view_month" style="margin-right: 4px;"></i>
+                                <span id="calendarTypeName">Semaine</span>&nbsp;
+                                <i class="calendar-icon tui-full-calendar-dropdown-arrow"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" role="menu" aria-labelledby="dropdownMenu-calendarType">
+                                <li role="presentation">
+                                    <a class="dropdown-item" role="menuitem" data-action="toggle-daily">
+                                        <i class="calendar-icon ic_view_day"></i>Jour
+                                    </a>
+                                </li>
+                                <li role="presentation">
+                                    <a class="dropdown-item" role="menuitem" data-action="toggle-weekly">
+                                        <i class="calendar-icon ic_view_week"></i>Semaine
+                                    </a>
+                                </li>
+                                <li role="presentation">
+                                    <a class="dropdown-item" role="menuitem" data-action="toggle-monthly">
+                                        <i class="calendar-icon ic_view_month"></i>Mois
+                                    </a>
+                                </li>
+                                <li role="presentation">
+                                    <a class="dropdown-item" role="menuitem" data-action="toggle-weeks2">
+                                        <i class="calendar-icon ic_view_week"></i>2 semaines
+                                    </a>
+                                </li>
+                                <li role="presentation">
+                                    <a class="dropdown-item" role="menuitem" data-action="toggle-weeks3">
+                                        <i class="calendar-icon ic_view_week"></i>3 semaines
+                                    </a>
+                                </li>
+                                <li role="presentation" class="dropdown-divider"></li>
+                                <li role="presentation">
+                                    <a class="dropdown-item" role="menuitem" data-action="toggle-workweek">
+                                        <input type="checkbox" class="tui-full-calendar-checkbox-square" value="toggle-workweek" checked>
+                                        <span class="checkbox-title"></span>Afficher les weekends
+                                    </a>
+                                </li>
+                                <li role="presentation">
+                                    <a class="dropdown-item" role="menuitem" data-action="toggle-start-day-1">
+                                        <input type="checkbox" class="tui-full-calendar-checkbox-square" value="toggle-start-day-1">
+                                        <span class="checkbox-title"></span>Démarrer la semaine le lundi
+                                    </a>
+                                </li>
+                                <li role="presentation">
+                                    <a class="dropdown-item" role="menuitem" data-action="toggle-narrow-weekend">
+                                        <input type="checkbox" class="tui-full-calendar-checkbox-square" value="toggle-narrow-weekend">
+                                        <span class="checkbox-title"></span>Réduire les weekends
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="lnb-new-schedule float-sm-end ms-sm-3 mt-4 mt-sm-0">
+
+                    {% if is_granted("ROLE_BDE") %}
+                    <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#createEvent">Ajouter un event</button>
+                    <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#editEvent">Mes events</button>
+                    {% endif %}
+                    </div>
+                    <div id="calendarList" class="lnb-calendars-d1 mt-4 mt-sm-0 me-sm-0" style="margin-bottom: 4rem!important;"></div>
+
+                    
+
+                    <div id="calendar" style="height: 800px"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- container-fluid -->
+        <div id="createEvent" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    {{form_start(form)}}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Créer un event</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                        {{form_widget(form)}}
+                       
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary waves-effect waves-light">Ajouter</button>
+                    </div>
+                    {{form_end(form)}}
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        <div id="editEvent" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="myModalLabel">Mes events</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% for event in myEvents %}
+                        <div class="d-flex justify-content-between mb-2">
+                            {{event.name}}
+                            <a href="{{path('app_calendar_deleteEvent', {id: event.id})}}" class="btn btn-danger">Supprimer</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary waves-effect waves-light">Ajouter</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+      </div>
+      <!-- End Page-content -->
+      {{ include('partials/footer.html.twig') }}
+    </div>
+    <!-- end main content-->
+  </div>
+  <!-- END layout-wrapper -->
+
+  {{ include('partials/vendor-scripts.html.twig') }}
+
+  <!-- apexcharts -->
+  <script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.min.js"></script>
+
+  <script src="/libs/tui-time-picker/tui-time-picker.min.js"></script>
+  <script src="/libs/tui-date-picker/tui-date-picker.min.js"></script>
+
+  <script src="/libs/moment/min/moment.min.js"></script>
+
+  <script src="/libs/tui-calendar/tui-calendar.min.js"></script>
+
+  <script src="/js/pages/calendars.js"></script>
+  <script src="/js/pages/calendar.init.js"></script>
+
+  <!-- App js -->
+  <script src="/js/app.js"></script>
+</body>
+

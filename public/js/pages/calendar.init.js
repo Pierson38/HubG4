@@ -13,25 +13,36 @@ File: Calendar init js
 /* global moment, tui, chance */
 /* global findCalendar, CalendarList, ScheduleList, generateSchedule */
 
-(function(window, Calendar) {
+(function (window, Calendar) {
     var cal, resizeThrottled;
-    var useCreationPopup = true;
-    var useDetailPopup = true;
-    var datePicker, selectedCalendar;
+    var useCreationPopup = false;
+    var useDetailPopup = false;
 
     cal = new Calendar('#calendar', {
-        defaultView: 'month',
+        defaultView: 'week',
         useCreationPopup: useCreationPopup,
         useDetailPopup: useDetailPopup,
+        month: {
+            daynames: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+            startDayOfWeek: 1,
+            workweek: false,
+            narrowWeekend: false,
+            visibleWeeksCount: 0,
+        },
+        week: {
+            daynames: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+            startDayOfWeek: 1,
+        },
+        isReadOnly: true,
         calendars: CalendarList,
         template: {
-            milestone: function(model) {
+            milestone: function (model) {
                 return '<span class="calendar-font-icon ic-milestone-b"></span> <span style="background-color: ' + model.bgColor + '">' + model.title + '</span>';
             },
-            allday: function(schedule) {
+            allday: function (schedule) {
                 return getTimeTemplate(schedule, true);
             },
-            time: function(schedule) {
+            time: function (schedule) {
                 return getTimeTemplate(schedule, false);
             }
         }
@@ -39,39 +50,33 @@ File: Calendar init js
 
     // event handlers
     cal.on({
-        'clickMore': function(e) {
-            console.log('clickMore', e);
+        'clickMore': function (e) {
         },
-        'clickSchedule': function(e) {
-            console.log('clickSchedule', e);
+        'clickSchedule': function (e) {
+            if (e.schedule.attendees[0]) {
+                window.open(e.schedule.attendees[0], '_blank');
+            }
         },
-        'clickDayname': function(date) {
-            console.log('clickDayname', date);
+        'clickDayname': function (date) {
         },
-        'beforeCreateSchedule': function(e) {
-            console.log('beforeCreateSchedule', e);
+        'beforeCreateSchedule': function (e) {
             saveNewSchedule(e);
         },
-        'beforeUpdateSchedule': function(e) {
+        'beforeUpdateSchedule': function (e) {
             var schedule = e.schedule;
             var changes = e.changes;
-
-            console.log('beforeUpdateSchedule', e);
 
             cal.updateSchedule(schedule.id, schedule.calendarId, changes);
             refreshScheduleVisibility();
         },
-        'beforeDeleteSchedule': function(e) {
-            console.log('beforeDeleteSchedule', e);
+        'beforeDeleteSchedule': function (e) {
             cal.deleteSchedule(e.schedule.id, e.schedule.calendarId);
         },
-        'afterRenderSchedule': function(e) {
+        'afterRenderSchedule': function (e) {
             var schedule = e.schedule;
             // var element = cal.getElement(schedule.id, schedule.calendarId);
-            // console.log('afterRenderSchedule', element);
         },
-        'clickTimezonesCollapseBtn': function(timezonesCollapsed) {
-            console.log('timezonesCollapsed', timezonesCollapsed);
+        'clickTimezonesCollapseBtn': function (timezonesCollapsed) {
 
             if (timezonesCollapsed) {
                 cal.setTheme({
@@ -120,6 +125,51 @@ File: Calendar init js
         return html.join('');
     }
 
+    function getColor(type) {
+        switch (type) {
+            case "bde":
+                return "#f4516c";
+                break;
+            case "cop":
+                return "#f6c23e";
+                break;
+            default:
+                return "#36b9cc";
+                break;
+        }
+    }
+
+    async function getEventForMonth() {
+        $.ajax({
+            url: "/calendar/get-events/", success: function (result) {
+                for (let index = 0; index < result.length; index++) {
+                    let event = JSON.parse(result[index]);
+                    cal.createSchedules([
+                        {
+                            id: String(event.id),
+                            calendarId: index,
+                            title: event.title != null ? event.title : event.name ,
+                            category: 'time',
+                            dueDateClass: event.type ? event.type : 'course',
+                            body: event.description,
+                            start: new Date(event.startAt),
+                            end: new Date(event.endAt),
+                            location: event.location,
+                            isReadOnly: true, // schedule is read-only
+                            bgColor: getColor(event.type),
+                            attendees: [event.link],
+                        }]);
+
+                }
+                cal.render(true);
+
+
+            }
+        });
+    }
+
+    getEventForMonth();
+
     /**
      * A listener for click the menu
      * @param {Event} e - click event
@@ -130,8 +180,6 @@ File: Calendar init js
         var options = cal.getOptions();
         var viewName = '';
 
-        console.log(target);
-        console.log(action);
         switch (action) {
             case 'toggle-daily':
                 viewName = 'day';
@@ -181,7 +229,6 @@ File: Calendar init js
 
         setDropdownCalendarType();
         setRenderRangeText();
-        setSchedules();
     }
 
     function onClickNavi(e) {
@@ -202,7 +249,6 @@ File: Calendar init js
         }
 
         setRenderRangeText();
-        setSchedules();
     }
 
     function onNewSchedule() {
@@ -258,17 +304,6 @@ File: Calendar init js
         selectedCalendar = calendar;
     }
 
-    function createNewSchedule(event) {
-        var start = event.start ? new Date(event.start.getTime()) : new Date();
-        var end = event.end ? new Date(event.end.getTime()) : moment().add(1, 'hours').toDate();
-
-        if (useCreationPopup) {
-            cal.openCreationPopup({
-                start: start,
-                end: end
-            });
-        }
-    }
     function saveNewSchedule(scheduleData) {
         var calendar = scheduleData.calendar || findCalendar(scheduleData.calendarId);
         var schedule = {
@@ -311,19 +346,19 @@ File: Calendar init js
         if (calendarId === 'all') {
             allCheckedCalendars = checked;
 
-            calendarElements.forEach(function(input) {
+            calendarElements.forEach(function (input) {
                 var span = input.parentNode;
                 input.checked = checked;
                 span.style.backgroundColor = checked ? span.style.borderColor : 'transparent';
             });
 
-            CalendarList.forEach(function(calendar) {
+            CalendarList.forEach(function (calendar) {
                 calendar.checked = checked;
             });
         } else {
             findCalendar(calendarId).checked = checked;
 
-            allCheckedCalendars = calendarElements.every(function(input) {
+            allCheckedCalendars = calendarElements.every(function (input) {
                 return input.checked;
             });
 
@@ -340,13 +375,13 @@ File: Calendar init js
     function refreshScheduleVisibility() {
         var calendarElements = Array.prototype.slice.call(document.querySelectorAll('#calendarList input'));
 
-        CalendarList.forEach(function(calendar) {
+        CalendarList.forEach(function (calendar) {
             cal.toggleSchedules(calendar.id, !calendar.checked, false);
         });
 
         cal.render(true);
 
-        calendarElements.forEach(function(input) {
+        calendarElements.forEach(function (input) {
             var span = input.nextElementSibling;
             span.style.backgroundColor = input.checked ? span.style.borderColor : 'transparent';
         });
@@ -360,19 +395,19 @@ File: Calendar init js
         var iconClassName;
 
         if (type === 'day') {
-            type = 'Daily';
+            type = 'Jour';
             iconClassName = 'calendar-icon ic_view_day';
         } else if (type === 'week') {
-            type = 'Weekly';
+            type = 'Semaine';
             iconClassName = 'calendar-icon ic_view_week';
         } else if (options.month.visibleWeeksCount === 2) {
-            type = '2 weeks';
+            type = '2 semaines';
             iconClassName = 'calendar-icon ic_view_week';
         } else if (options.month.visibleWeeksCount === 3) {
-            type = '3 weeks';
+            type = '3 semaines';
             iconClassName = 'calendar-icon ic_view_week';
         } else {
-            type = 'Monthly';
+            type = 'Mois';
             iconClassName = 'calendar-icon ic_view_month';
         }
 
@@ -398,27 +433,13 @@ File: Calendar init js
         renderRange.innerHTML = html.join('');
     }
 
-    function setSchedules() {
-        cal.clear();
-        generateSchedule(cal.getViewName(), cal.getDateRangeStart(), cal.getDateRangeEnd());
-        cal.createSchedules(ScheduleList);
-        // var schedules = [
-        //     {id: 489273, title: 'Workout for 2019-04-05', isAllDay: false, start: '2018-02-01T11:30:00+09:00', end: '2018-02-01T12:00:00+09:00', goingDuration: 30, comingDuration: 30, color: '#ffffff', isVisible: true, bgColor: '#69BB2D', dragBgColor: '#69BB2D', borderColor: '#69BB2D', calendarId: 'logged-workout', category: 'time', dueDateClass: '', customStyle: 'cursor: default;', isPending: false, isFocused: false, isReadOnly: true, isPrivate: false, location: '', attendees: '', recurrenceRule: '', state: ''},
-        //     // {id: 18073, title: 'completed with blocks', isAllDay: false, start: '2018-11-17T09:00:00+09:00', end: '2018-11-17T10:00:00+09:00', color: '#ffffff', isVisible: true, bgColor: '#54B8CC', dragBgColor: '#54B8CC', borderColor: '#54B8CC', calendarId: 'workout', category: 'time', dueDateClass: '', customStyle: '', isPending: false, isFocused: false, isReadOnly: false, isPrivate: false, location: '', attendees: '', recurrenceRule: '', state: ''}
-        // ];
-        // cal.createSchedules(schedules);
-        refreshScheduleVisibility();
-    }
 
     function setEventListener() {
         $('#menu-navi').on('click', onClickNavi);
         $('.dropdown-menu a[role="menuitem"]').on('click', onClickMenu);
         $('#lnb-calendars').on('change', onChangeCalendars);
-
-        $('#btn-save-schedule').on('click', onNewSchedule);
-        $('#btn-new-schedule').on('click', createNewSchedule);
-
         $('#dropdownMenu-calendars-list').on('click', onChangeNewScheduleCalendar);
+        $('#btn-save-schedule').on('click', onNewSchedule);
 
         window.addEventListener('resize', resizeThrottled);
     }
@@ -427,23 +448,21 @@ File: Calendar init js
         return target.dataset ? target.dataset.action : target.getAttribute('data-action');
     }
 
-    resizeThrottled = tui.util.throttle(function() {
+    resizeThrottled = tui.util.throttle(function () {
         cal.render();
     }, 50);
 
     window.cal = cal;
 
-    setDropdownCalendarType();
     setRenderRangeText();
-    setSchedules();
     setEventListener();
 })(window, tui.Calendar);
 
 // set calendars
-(function() {
+(function () {
     var calendarList = document.getElementById('calendarList');
     var html = [];
-    CalendarList.forEach(function(calendar) {
+    CalendarList.forEach(function (calendar) {
         html.push('<div class="lnb-calendars-item"><label>' +
             '<input type="checkbox" class="tui-full-calendar-checkbox-round" value="' + calendar.id + '" checked>' +
             '<span style="border-color: ' + calendar.borderColor + '; background-color: ' + calendar.borderColor + ';"></span>' +
@@ -452,4 +471,7 @@ File: Calendar init js
         );
     });
     calendarList.innerHTML = html.join('\n');
+
 })();
+
+

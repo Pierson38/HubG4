@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Conversations;
 use App\Entity\Messages;
+use App\Entity\MessagesImages;
 use App\Entity\User;
 use App\Repository\ConversationsRepository;
 use App\Repository\MessagesRepository;
 use App\Repository\UserRepository;
+use App\Service\FileService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -50,6 +52,7 @@ class MessagerieController extends AbstractController
 
         if (count($conversations) > 0) {
             $conv = $conversations[0][0];
+            // dd($conv->getMessages()->getValues());
             $messagesRepository->setNotReadRead($user, $conv);
         } else {
             $conv = null;
@@ -137,6 +140,42 @@ class MessagerieController extends AbstractController
         $message->setContent($content);
         $message->setConversation($conversation);
         $message->setCreatedBy($userRepository->findOneBy(['id' => (int)$request->request->get('userId')]));
+
+        $conversation->setUpdatedAt(new DateTimeImmutable());
+        $manager->persist($conversation);
+        $manager->persist($message);
+        $manager->flush();
+
+
+        $response = new JsonResponse( // Enfin, on retourne la réponse
+            $message->getId(),
+            Response::HTTP_OK,
+            [],
+            true
+        );
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        return $response;
+    }
+
+    #[Route('/conversation/{id}/add-image-message', name: 'app_messengers_add_imageMessage', methods: ['POST'])]
+    public function addImageMessage(Conversations $conversation, Request $request, EntityManagerInterface $manager, FileService $fileService): JsonResponse
+    {
+
+        if (empty($conversation)) {
+            throw new AccessDeniedHttpException('Message have to be sent on a specific conversation');
+        }
+
+        $message = new Messages();
+        $message->setContent("");
+        $message->setConversation($conversation);
+        $message->setCreatedBy($this->getUserFromInterface());
+        $manager->persist($message);
+
+        $imageMessage = new MessagesImages();
+        $imageMessage->setMessage($message);
+        $imageMessage->setName($fileService->addImageMessage($request->files->get('image')));
+        $manager->persist($imageMessage);
+        
 
         $conversation->setUpdatedAt(new DateTimeImmutable());
         $manager->persist($conversation);

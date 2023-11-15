@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\EventsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EventsRepository::class)]
 class Events
@@ -12,24 +13,31 @@ class Events
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("eventsEvent")]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups("eventsEvent")]
     private ?string $name = null;
 
+    #[Groups("eventsEvent")]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[Groups("eventsEvent")]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $location = null;
 
     #[ORM\Column]
+    #[Groups("eventsEvent")]
     private ?\DateTimeImmutable $startAt = null;
 
     #[ORM\Column]
+    #[Groups("eventsEvent")]
     private ?\DateTimeImmutable $endAt = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups("eventsEvent")]
     private ?string $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
@@ -41,6 +49,10 @@ class Events
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups("eventsEvent")]
+    private ?string $link = null;
 
     public function __construct()
     {
@@ -157,6 +169,18 @@ class Events
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
+    }
+
+    public function setLink(?string $link): static
+    {
+        $this->link = $link;
 
         return $this;
     }

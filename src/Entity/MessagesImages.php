@@ -13,12 +13,16 @@ class MessagesImages
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messagesImages')]
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $name = null;
+
+    #[ORM\OneToOne(inversedBy: 'messagesImages', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Messages $message = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct()
     {
@@ -30,18 +34,6 @@ class MessagesImages
         return $this->id;
     }
 
-    public function getMessage(): ?Messages
-    {
-        return $this->message;
-    }
-
-    public function setMessage(?Messages $message): static
-    {
-        $this->message = $message;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -50,6 +42,30 @@ class MessagesImages
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getMessage(): ?Messages
+    {
+        return $this->message;
+    }
+
+    public function setMessage(Messages $message): static
+    {
+        $this->message = $message;
 
         return $this;
     }

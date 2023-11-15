@@ -45,7 +45,7 @@ function hexToRGBA(hex) {
     var calendar;
     var id = 0;
 
-    calendar = new CalendarInfo();
+    /*calendar = new CalendarInfo();
     id += 1;
     calendar.id = String(id);
     calendar.name = 'My Calendar';
@@ -53,65 +53,6 @@ function hexToRGBA(hex) {
     calendar.bgColor = '#556ee6';
     calendar.dragBgColor = '#556ee6';
     calendar.borderColor = '#556ee6';
-    addCalendar(calendar);
+    addCalendar(calendar);*/
 
-    calendar = new CalendarInfo();
-    id += 1;
-    calendar.id = String(id);
-    calendar.name = 'Company';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#50a5f1';
-    calendar.dragBgColor = '#50a5f1';
-    calendar.borderColor = '#50a5f1';
-    addCalendar(calendar);
-
-    calendar = new CalendarInfo();
-    id += 1;
-    calendar.id = String(id);
-    calendar.name = 'Family';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#f46a6a';
-    calendar.dragBgColor = '#f46a6a';
-    calendar.borderColor = '#f46a6a';
-    addCalendar(calendar);
-
-    calendar = new CalendarInfo();
-    id += 1;
-    calendar.id = String(id);
-    calendar.name = 'Friend';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#34c38f';
-    calendar.dragBgColor = '#34c38f';
-    calendar.borderColor = '#34c38f';
-    addCalendar(calendar);
-
-    calendar = new CalendarInfo();
-    id += 1;
-    calendar.id = String(id);
-    calendar.name = 'Travel';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#bbdc00';
-    calendar.dragBgColor = '#bbdc00';
-    calendar.borderColor = '#bbdc00';
-    addCalendar(calendar);
-
-    calendar = new CalendarInfo();
-    id += 1;
-    calendar.id = String(id);
-    calendar.name = 'Birthdays';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#f1b44c';
-    calendar.dragBgColor = '#f1b44c';
-    calendar.borderColor = '#f1b44c';
-    addCalendar(calendar);
-
-    calendar = new CalendarInfo();
-    id += 1;
-    calendar.id = String(id);
-    calendar.name = 'National Holidays';
-    calendar.color = '#ffffff';
-    calendar.bgColor = '#ff4040';
-    calendar.dragBgColor = '#ff4040';
-    calendar.borderColor = '#ff4040';
-    addCalendar(calendar);
 })();

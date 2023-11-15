@@ -18,10 +18,12 @@ class=" {% if message.createdBy == app.user %} right {% endif %} last-chat">
     </div>
     <div class="ctext-wrap">
         <div class="conversation-name">{{message.createdBy.firstname}}</div>
-        <p>
-            {{message.content}}
-        </p>
-
+        
+        {% if message.messagesImages %}
+        <img width="200" src="/uploads/messageImages/{{message.messagesImages.name}}" alt="" class="img-fluid rounded">
+        {% else %}
+        <p>{{message.content}} </p>
+        {% endif %}
         <p class="chat-time mb-0"><i
                 class="bx bx-time-five align-middle me-1"></i>{{message.createdAt|format_datetime('none', 'short', locale="fr")}}</p>
     </div>

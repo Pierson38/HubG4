@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Events;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,10 +22,12 @@ class EventsRepository extends ServiceEntityRepository
         parent::__construct($registry, Events::class);
     }
 
+    
+
 //    /**
 //     * @return Events[] Returns an array of Events objects
 //     */
-//    public function findByExampleField($value): array
+//    public function getEvents(User $user): array
 //    {
 //        return $this->createQueryBuilder('e')
 //            ->andWhere('e.exampleField = :val')
