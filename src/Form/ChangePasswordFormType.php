@@ -28,7 +28,7 @@ class ChangePasswordFormType extends AbstractType
                         'message' => 'Veuillez entrer un mot de passe',
                     ]),
                     new Length([
-                        'min' => 6,
+                        'min' => 8,
                         'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
@@ -38,6 +38,9 @@ class ChangePasswordFormType extends AbstractType
                 'attr' => [
                     'class' => 'form-control mb-3', // Add your desired classes here
                     'placeholder' => 'Nouveau mot de passe',
+                    'pattern' => '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$',
+                    'title' => 'Doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial',
+                    'minlength' => '8',
                 ],
             ],
             'second_options' => [
@@ -45,6 +48,9 @@ class ChangePasswordFormType extends AbstractType
                 'attr' => [
                     'class' => 'form-control mb-3', // Add your desired classes here
                     'placeholder' => 'Re-tapez nouveau mot de passe',
+                    'pattern' => '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$',
+                    'title' => 'Doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial',
+                    'minlength' => '8',
                 ],
             ],
             'invalid_message' => 'Les champs de mot de passe doivent correspondre.',
