@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Lbc;
 use App\Entity\Conversations;
 use App\Entity\Courses;
-use App\Entity\Folder;
 use App\Entity\Messages;
 use App\Entity\Posts;
 use App\Entity\PostsComments;
@@ -21,7 +19,7 @@ use App\Repository\PostsCommentsRepository;
 use App\Repository\PostsRepository;
 use App\Repository\PromoRepository;
 use App\Repository\UserRepository;
-use App\Service\ConversationService;
+use App\Service\EmailService;
 use App\Service\FileService;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -30,6 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[Security('is_granted("ROLE_COP")')]
 #[Route('/admin')]
@@ -64,7 +63,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/users/create', name: 'app_admin_users_create')]
-    public function adminUsersCreate(EntityManagerInterface $manager, Request $request, UserPasswordHasherInterface $userPasswordHasher, FileService $fileService): Response
+    public function adminUsersCreate(EntityManagerInterface $manager, EmailService $emailService, Request $request, UserPasswordHasherInterface $userPasswordHasher, FileService $fileService): Response
     {
 
         $form = $this->createForm(UserType::class);
@@ -85,6 +84,7 @@ class AdminController extends AbstractController
             $manager->flush();
 
             $fileService->createPersonalRepository($user);
+            $emailService->sendEmail($user, "registration", ["link" => $this->generateUrl("app_login", [], UrlGeneratorInterface::ABSOLUTE_URL)]);
 
             $this->addFlash("success", "L'utilisateur a bien été créé");
             return $this->redirectToRoute("app_admin_users");

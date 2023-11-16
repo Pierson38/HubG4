@@ -19,7 +19,7 @@ class Folder
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'folders')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'CASCADE')]
     private ?User $createdBy = null;
 
     #[ORM\Column]

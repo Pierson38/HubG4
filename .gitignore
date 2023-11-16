@@ -6,9 +6,10 @@
 /migrations/
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/public/uploads/drive/personals/
-/public/uploads/drive/promos/
-/public/uploads/messageImages/
+/public/uploads/drive/personals/*
+/public/uploads/drive/promos/*
+/public/uploads/messageImages/*
+/public/uploads/userImages/*
 
 /var/
 /vendor/
