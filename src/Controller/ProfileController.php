@@ -49,9 +49,9 @@ class ProfileController extends AbstractController
 
             if ($profilePicture) {
                 // Call the changeUserImageProfile method from the FileService
-                $img = $this->fileService->changeUserImageProfile($user, $profilePicture);
+                $this->fileService->changeUserImageProfile($user, $profilePicture);
 
-                $this->addFlash('success', 'Profile picture updated successfully');
+                $this->addFlash('success', 'Votre photo de profile a bien été modifiée');
             }
         }
 
@@ -75,10 +75,10 @@ class ProfileController extends AbstractController
                 $em->flush();
 
 
-                $this->addFlash('success', 'Password updated successfully');
+                $this->addFlash('success', 'Votre mot de passe a bien été modifié');
                 return $this->redirectToRoute('app_profile');
             } else {
-                $this->addFlash('error', 'Passwords do not match');
+                $this->addFlash('error', 'Les mots de passe ne correspondent pas');
                 // You might want to handle the error and redirect back to the password reset form
                 return $this->redirectToRoute('app_profile');
             }
