@@ -1,0 +1,75 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+
+	{{ include('partials/title-meta.html.twig', {title: 'Réinitialiser votre mot de passe'}) }}
+
+	{{ include('partials/head-css.html.twig') }}
+</head>
+
+<body style="background: #2a3042" class="overflow-hidden">
+	<div class="account-pages my-5 pt-sm-5">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-8 col-lg-6 col-xl-5">
+					<div class="card overflow-hidden" style="border-radius: 0.6rem">
+						<div style="background: linear-gradient(to right,#54519F,#716eb5)">
+							<div class="row">
+								<div class="col-7">
+									<div class="text-primary p-4">
+
+										{% for flash_error in app.flashes('reset_password_error') %}
+											<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+										{% endfor %}
+
+										<h5 class="text-white">
+											Réinitialisez votre mot de passe</h5>
+									</div>
+								</div>
+								<div class="col-5 align-self-end">
+									<img src="/images/profile-img.png" alt="" class="img-fluid">
+								</div>
+							</div>
+						</div>
+						<div class="card-body pt-0">
+							<div>
+								<a href="{{ path('home') }}">
+									<div class="avatar-md profile-user-wid mb-4">
+										<span class="avatar-title rounded-circle" style="background: linear-gradient(to right,#54519F,#716eb5); border: 0.1rem solid">
+											<img src="/images/hubG4_S.png" alt="" height="34">
+										</span>
+									</div>
+								</a>
+							</div>
+
+							<div class="px-1 pb-1">
+								{{ form_start(requestForm) }}
+                                    
+                                    {{ form_row(requestForm.email) }}
+
+                                    <div class="alert alert-success text-center text-black" role="alert">
+                                        Entrez votre email et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                                    </div>
+                                    <button class="btn text-white w-md waves-effect waves-light" type="submit" style="background: linear-gradient(to right,#54519F,#716eb5)">Réinitialiser</button>
+								{{ form_end(requestForm) }}
+							</div>
+
+						</div>
+					</div>
+					<div class="mt-5 text-center text-white">
+						<p>Vous souhaitez vous connecté ?
+							<a href="login" class="fw-medium text-primary">
+								C'est par ici !</a>
+						</p>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	{{ include('partials/vendor-scripts.html.twig') }}
+
+	<!-- App js -->
+	<script src="/js/app.js"></script>
+</body></html>

@@ -31,9 +31,30 @@
                 </li>
 
                 <li>
-                    <a href="{{path('app_drive')}}" class="waves-effect">
+                    <a href="{{path('app_forum')}}" class="waves-effect">
                         <i class="bx bx-file"></i>
+                        <span key="t-calendar">Forum</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{path('app_drive')}}" class="waves-effect">
+                        <i class="bx bx-folder"></i>
                         <span key="t-calendar">Drive</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{path('app_covoit')}}" class="waves-effect">
+                        <i class="bx bx-bus"></i>
+                        <span key="t-calendar">Covoiturage</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{path('app_lbc')}}" class="waves-effect">
+                        <i class="bx bx-store"></i>
+                        <span key="t-calendar">Lbc</span>
                     </a>
                 </li>
 
@@ -46,7 +67,7 @@
                 </li>
                 {% endif %}
 
-                <li class="menu-title" key="t-menu">{% trans %}Menu{% endtrans %}</li>
+                {# <li class="menu-title" key="t-menu">{% trans %}Menu{% endtrans %}</li>
 
                 <li>
                     <a href="javascript: void(0);" class="waves-effect">
@@ -92,9 +113,9 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> #}
 
-                <li class="menu-title" key="t-apps">{% trans %}Apps{% endtrans %}</li>
+                {# <li class="menu-title" key="t-apps">{% trans %}Apps{% endtrans %}</li>
 
                 <li>
                     <a href="calendar" class="waves-effect">
@@ -398,7 +419,7 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> #}
 
             </ul>
         </div>

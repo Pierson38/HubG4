@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -113,6 +114,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->lbcs = new ArrayCollection();
         $this->files = new ArrayCollection();
         $this->messages = new ArrayCollection();
+    }
+
+    public function __toString() {
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     public function getId(): ?int
@@ -718,4 +723,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
 }

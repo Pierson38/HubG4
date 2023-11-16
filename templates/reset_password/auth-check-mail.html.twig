@@ -1,0 +1,69 @@
+{{ include('partials/main.html.twig') }}
+
+    <head>
+        
+        {{ include('partials/title-meta.html.twig', {title: 'Veuillez verifier votre boite mail'}) }}
+
+        {{ include('partials/head-css.html.twig') }}
+
+    </head>
+
+    <body style="background: #2a3042">
+        <div class="account-pages pt-sm-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="text-center mb-4 text-muted">
+                            <a href="{{ path('home') }}" class="d-block auth-logo">
+                                <img src="/images/hubG4.png" alt="" height="100" width="200" class="mx-auto rounded">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!-- end row -->
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6 col-xl-5">
+                        <div class="card">
+                            
+                            <div class="card-body"> 
+                                
+                                <div class="p-2">
+                                    <div class="text-center">
+
+                                        <div class="avatar-md mx-auto">
+                                            <div class="avatar-title rounded-circle bg-light" style="background: linear-gradient(to right,#54519F,#716eb5)">
+                                                <i class="bx bx-mail-send h1 mb-0 text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div class="p-2 mt-4">
+                                            <h4>Succès !</h4>
+                                            <p class="text-muted">
+                                            Un email a été envoyé avec un lien pour réinitialiser votre mot de passe.
+                                            Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.<br>
+                                            Si vous n'avez pas reçu l'email, veuillez vérifier votre dossier spam ou renvoyer l'email en cliquant sur le bouton ci dessous.
+        
+                                            </p>
+                                            <div class="mt-4">
+                                                <a href="{{ path('app_forgot_password_request') }}" style="background: linear-gradient(to right,#54519F,#716eb5)" class="btn text-white">Renvoyer</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                            </div>
+                        </div>
+                        <div class="mt-5 text-center">
+                            
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+        
+        <!-- App js -->
+        <script src="/js/app.js"></script>
+    </body>
+</html>

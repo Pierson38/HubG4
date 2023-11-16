@@ -1,0 +1,67 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+	{{
+    include('partials/title-meta.html.twig', {title: 'Forum - Créer un post'})
+  }}
+
+	<link rel="stylesheet" type="text/css" href="/libs/tui-time-picker/tui-time-picker.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/libs/tui-date-picker/tui-date-picker.min.css"/>
+	<link href="/libs/tui-calendar/tui-calendar.min.css" rel="stylesheet" type="text/css"/>
+
+	{{
+    include('partials/head-css.html.twig')
+  }}
+</head>
+
+<body
+	data-sidebar="dark">
+	<!-- Begin page -->
+	<div id="layout-wrapper">
+		{{ include('partials/menu.html.twig') }}
+
+		<style>
+			.tui-full-calendar-weekday-schedule {
+				height: auto !important;
+			}
+		</style>
+		<!-- ============================================================== -->
+		<!-- Start right Content here -->
+		<!-- ============================================================== -->
+			<div class="main-content admin"> <div class="page-content">
+				<div class="container-fluid">
+					{{ include('partials/page-title.html.twig', {pagetitle: 'Forum', title: 'Créer un post'}) }}
+
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="card">
+								<div class="card-body">
+                                    {{form_start(form)}}
+
+                                    {{form_widget(form)}}
+
+                                    <button type="submit" class="btn btn-primary mt-4">Créer</button>
+                                    {{form_end(form)}}
+                                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- End Page-content -->
+				{{ include('partials/footer.html.twig') }}
+			</div>
+			<!-- end main content-->
+		</div>
+		<!-- END layout-wrapper -->
+
+		{{ include('partials/vendor-scripts.html.twig') }}
+
+                <!--tinymce js-->
+        <script src="/libs/tinymce/tinymce.min.js"></script>
+
+        <!-- init js -->
+        <script src="/js/pages/form-editor.init.js"></script>
+		<!-- App js -->
+		<script src="/js/app.js"></script>
+	</body>
+</body>

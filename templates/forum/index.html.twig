@@ -1,0 +1,155 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+
+	{{ include('partials/title-meta.html.twig', {title: 'Forum'}) }}
+
+	{{ include('partials/head-css.html.twig') }}
+
+	<link
+	href="/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+
+	<!-- Responsive datatable examples -->
+	<link href="/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+</head>
+
+{{ include('partials/body.html.twig') }}
+
+<!-- Begin page -->
+<div id="layout-wrapper">
+
+	{{ include('partials/menu.html.twig') }}
+
+	<!-- ============================================================== -->
+	<!-- Start right Content here -->
+	<!-- ============================================================== -->
+		<div class="main-content"> <div class="page-content">
+			<div
+				class="container-fluid">
+
+				<!-- start page title -->
+				<div class="row">
+					<div class="col-12">
+						<div class="page-title-box d-flex align-items-center justify-content-between">
+							<h4 class="mb-0 font-size-18">Forum</h4>
+
+							<div class="page-title-right">
+								<ol class="breadcrumb m-0">
+									<li class="breadcrumb-item">
+										<a href="javascript: void(0);">Forum</a>
+									</li>
+									<li class="breadcrumb-item active">Accueil</li>
+								</ol>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<!-- end page title -->
+
+				<div class="row">
+					<div class="col-lg-12">
+						{% for category in categories %}
+							{% if category.posts.values|length > 0 %}
+								<div class="mt-4">
+									<h4>{{category.name}}</h4>
+									<table class="table table-hover dt-responsive datatable nowrap w-100">
+										<thead>
+											<tr>
+												<th scope="col" style="width: 100px">#</th>
+												<th scope="col">Titre</th>
+												<th scope="col">Créer le</th>
+												<th scope="col">Dernière activité</th>
+												<th scope="col">Nombre de commentaires</th>
+												<th scope="col">Créer par</th>
+											</tr>
+										</thead>
+
+										<tbody>
+                                            {% for subCategories in category.postsChildren.values %}
+                                            <tr>
+                                                <td><i class="bx bxs-folder" style="font-size: 2em; color: lightpink"></i></td>
+                                                <td>
+                                                    <h5 class="text-truncate font-size-14">
+                                                        <a href="{{path("app_forum_category", {id: subCategories.id})}}" class="text-dark">{{subCategories.name}}</a>
+                                                    </h5>
+                                                </td>
+                                                
+                                                <td colspan="4">
+                                                    
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+											{% for post in category.posts.values %}
+												<tr>
+													<td><i class="bx bxs-message" style="font-size: 2em; color: lightblue"></i></td>
+													<td>
+														<h5 class="text-truncate font-size-14">
+															<a href="{{path("app_forum_single_post", {id: post.id})}}" class="text-dark">{{post.title}}</a>
+														</h5>
+													</td>
+													<td>{{post.createdAt|format_datetime('short', 'short', locale="fr")}}</td>
+													<td>{{post.updatedAt|format_datetime('short', 'short', locale="fr")}}</td>
+													<td>{{post.postsComments|length}}</td>
+													<td>{{post.createdBy}}</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+				<!-- end row -->
+
+			</div>
+			<!-- container-fluid -->
+		</div>
+		<!-- End Page-content -->
+
+
+		{{ include('partials/footer.html.twig') }}
+	</div>
+	<!-- end main content-->
+
+</div>
+<!-- END layout-wrapper -->
+
+{{ include('partials/right-sidebar.html.twig') }}
+
+{{ include('partials/vendor-scripts.html.twig') }}
+<script src="/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<!-- bootstrap-datepicker js -->
+<script src="/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<!-- Responsive examples -->
+<script src="/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+<script src="/js/app.js"></script>
+<script>$(document).ready(function () {
+
+var allTables = document.querySelectorAll('.datatable');
+
+    allTables.forEach(function (value) {
+        var table = $(value).DataTable({
+            lengthChange: false,
+            language: {
+                url: "/js/pages/dataFrench.json"
+            },
+            buttons: []
+        });
+
+        table.buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+
+        $(".dataTables_length select").addClass('form-select form-select-sm');
+    });
+});</script>
+
+</body></html>
