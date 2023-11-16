@@ -16,12 +16,13 @@ security:
             security: false
         main:
             lazy: true
+            access_denied_url: /login
             provider: app_user_provider
             custom_authenticator: App\Security\LoginAuthenticator
             logout:
                 path: app_logout
                 # where to redirect after logout
-                # target: app_any_route
+                target: app_login
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -38,13 +39,12 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: ROLE_USER }
     role_hierarchy:
         ROLE_BDE: ROLE_USER
-        ROLE_COP: ROLE_BDE
         ROLE_PROFESSOR: ROLE_BDE
-        ROLE_ADMIN: ROLE_USER
+        ROLE_COP: ROLE_PROFESSOR
 
 when@test:
     security:

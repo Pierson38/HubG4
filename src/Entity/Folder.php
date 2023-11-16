@@ -19,7 +19,7 @@ class Folder
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'folders')]
-    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $createdBy = null;
 
     #[ORM\Column]
@@ -39,6 +39,16 @@ class Folder
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $children;
+
+    private int $filesCount = 0;
+
+    private string $weight = "";
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $path = null;
+
+    #[ORM\OneToOne(mappedBy: 'folder', cascade: ['persist', 'remove'])]
+    private ?Promo $promo = null;
 
     public function __construct()
     {
@@ -200,6 +210,59 @@ class Folder
                 $child->setParent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFilesCount(): int
+    {
+        return $this->filesCount;
+    }
+
+    public function setFilesCount(int $count): static
+    {
+        $this->filesCount = $count;
+
+        return $this;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function setPath(string $path): static
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    public function getWeight(): ?string
+    {
+        return $this->weight;
+    }
+
+    public function setWeight(string $weight): static
+    {
+        $this->weight = $weight;
+
+        return $this;
+    }
+
+    public function getPromo(): ?Promo
+    {
+        return $this->promo;
+    }
+
+    public function setPromo(Promo $promo): static
+    {
+        // set the owning side of the relation if necessary
+        if ($promo->getFolder() !== $this) {
+            $promo->setFolder($this);
+        }
+
+        $this->promo = $promo;
 
         return $this;
     }

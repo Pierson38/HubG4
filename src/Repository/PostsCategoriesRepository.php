@@ -21,20 +21,17 @@ class PostsCategoriesRepository extends ServiceEntityRepository
         parent::__construct($registry, PostsCategories::class);
     }
 
-//    /**
-//     * @return PostsCategories[] Returns an array of PostsCategories objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /**
+    * @return PostsCategories[] Returns an array of PostsCategories objects
+    */
+   public function getAllBaseCategories(): array
+   {
+       return $this->createQueryBuilder('p')
+           ->andWhere('p.categoryParent IS NULL')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
 
 //    public function findOneBySomeField($value): ?PostsCategories
 //    {

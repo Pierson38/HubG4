@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
+use App\Service\FileService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -12,7 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserFixtures extends Fixture implements DependentFixtureInterface
 {
 
-    function __construct(private UserPasswordHasherInterface $userPasswordHasher) {
+    function __construct(private UserPasswordHasherInterface $userPasswordHasher, private FileService $fileService) {
         
     }
 
@@ -40,12 +41,16 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user->setPromo($this->getReference(PromoFixtures::PROMO_REFERENCE . $faker->numberBetween(0, 4)));
 
             $manager->persist($user);
+            $manager->flush();
+
+            $this->fileService->createPersonalRepository($user);
+
 
             $this->addReference(self::USER_REFERENCE . $i, $user);
 
         }
 
-        $manager->flush();
+        
     }
 
     public function getDependencies()

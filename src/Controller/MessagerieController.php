@@ -196,7 +196,7 @@ class MessagerieController extends AbstractController
 
     // #[Security("is_granted('IS_AUTHENTICATED_FULLY')")]
     #[Route('/conversation/{id}/get-messages', name: 'app_messengers_get_message', methods: ['GET'])]
-    public function getMessages(Conversations $conversation, Request $request, MessagesRepository $messagesRepository, SerializerInterface $serializer, EntityManagerInterface $manager): JsonResponse
+    public function getMessages(Conversations $conversation, MessagesRepository $messagesRepository, SerializerInterface $serializer, EntityManagerInterface $manager): JsonResponse
     {
         $messages = $messagesRepository->getLastMessages($conversation, $this->getUserFromInterface());
         $toReturn = [];
