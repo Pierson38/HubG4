@@ -1,0 +1,56 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+
+	{{ include('partials/title-meta.html.twig', {title: 'Covoiturage - Modifier un covoit'}) }}
+
+	{{ include('partials/head-css.html.twig') }}
+
+	<link href="https://api.mapbox.com/mapbox-assembly/v1.3.0/assembly.min.css" rel="stylesheet" />
+
+</head>
+
+{{ include('partials/body.html.twig') }}
+
+<!-- Begin page -->
+<div id="layout-wrapper">
+
+	{{ include('partials/menu.html.twig') }}
+
+	<!-- ============================================================== -->
+	<!-- Start right Content here -->
+	<!-- ============================================================== -->
+		<div class="main-content"> <div class="page-content">
+			<div class="container-fluid">
+
+				{{ include('partials/page-title.html.twig', {pagetitle: 'Covoiturage', title: 'Modifier un covoit'}) }}
+
+				<div class="row">
+
+								{{form_start(form)}}
+							{{form_widget(form)}}
+							<button type="submit" class="btn btn-primary mt-4" style="background-color: #556ee6; padding: 0.47rem 0.75rem; border-radius: 0.25rem;">Modifier</button>
+							{{form_end(form)}}
+
+				</div>
+			</div>
+			<!-- container-fluid -->
+		</div>
+		<!-- End Page-content -->
+
+
+		{{ include('partials/footer.html.twig') }}
+	</div>
+	<!-- end main content-->
+
+</div>
+<!-- END layout-wrapper -->
+
+{{ include('partials/right-sidebar.html.twig') }}
+
+{{ include('partials/vendor-scripts.html.twig') }}
+
+<script src="/js/app.js"></script>
+<script id="search-js" defer="" src="https://api.mapbox.com/search-js/v1.0.0-beta.18/web.js"></script>
+<script src="/js/pages/createCovoit.js"></script>
+</body></html>

@@ -43,11 +43,24 @@ class Carpool
     #[ORM\Column(nullable: true)]
     private ?int $price = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $fromLat = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $fromLong = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $toLat = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $toLong = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();            
         $this->carpoolMembers = new ArrayCollection();
+        $this->date = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -177,6 +190,54 @@ class Carpool
     public function setPrice(?int $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getFromLat(): ?string
+    {
+        return $this->fromLat;
+    }
+
+    public function setFromLat(?string $fromLat): static
+    {
+        $this->fromLat = $fromLat;
+
+        return $this;
+    }
+
+    public function getFromLong(): ?string
+    {
+        return $this->fromLong;
+    }
+
+    public function setFromLong(?string $fromLong): static
+    {
+        $this->fromLong = $fromLong;
+
+        return $this;
+    }
+
+    public function getToLat(): ?string
+    {
+        return $this->toLat;
+    }
+
+    public function setToLat(?string $toLat): static
+    {
+        $this->toLat = $toLat;
+
+        return $this;
+    }
+
+    public function getToLong(): ?string
+    {
+        return $this->toLong;
+    }
+
+    public function setToLong(?string $toLong): static
+    {
+        $this->toLong = $toLong;
 
         return $this;
     }
