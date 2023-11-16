@@ -14,10 +14,28 @@ class PasswordResetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('plainPassword', RepeatedType::class, [
+        ->add('Password', RepeatedType::class, [
             'type' => PasswordType::class,
-            'first_options' => ['label' => 'New Password'],
-            'second_options' => ['label' => 'Repeat Password'],
+            'first_options' => [
+                'label' => 'Nouveau mot de passe',
+                'attr' => [
+                    'placeholder' => 'Entrez votre nouveau mot de passe',
+                    'class' => 'form-control', // Add your styling here
+                    'pattern' => '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$',
+                    'title' => 'Doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial',
+                    'minlength' => '8',
+                ],
+            ],
+            'second_options' => [
+                'label' => 'Repetez votre nouveau mot de passe',
+                'attr' => [
+                    'placeholder' => 'Repetez votre nouveau mot de passe',
+                    'class' => 'form-control', // Add your styling here
+                    'pattern' => '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*\W).{8,}$',
+                    'title' => 'Doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial',
+                    'minlength' => '8',
+                ],
+            ],
         ]);
     }
 

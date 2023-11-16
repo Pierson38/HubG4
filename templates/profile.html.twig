@@ -35,7 +35,9 @@
 										<h4>{{app.user.promo.name }}</h4>
 									</div>
 								</div>
-								<div class="col-5 align-self-end">
+								<div
+									class="col-5 align-self-end">
+									{# Add the profile picture of the user logged #}
 									<img src="/images/profile-img.png" alt="" class="img-fluid">
 								</div>
 							</div>
@@ -44,9 +46,10 @@
 							<div class="row">
 								<div class="col-sm-4">
 									<div class="avatar-md profile-user-wid mb-4">
-										<img src="/images/users/avatar-1.jpg" alt="" class="img-thumbnail rounded-circle">
+										<img src="{{app.user.picture}}" alt="" class="img-thumbnail rounded-circle">
 									</div>
-									<h5 class="font-size-15">{{app.user.firstName }}
+									<h5 class="font-size-15">
+										{{app.user.firstName }}
 										{{app.user.lastName }}</h5>
 									<p class="">Email :
 										{{app.user.email }}</p>
@@ -56,43 +59,48 @@
 									<button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#EditPicture">Modifier photo de profil</button>
 									<button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#EditPassword">Modifier Mot de passe</button>
 
-									<!-- sample modal content -->
 									<div id="EditPicture" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
 										<div class="modal-dialog">
 											<div class="modal-content">
+												{{ form_start(profilePictureForm) }}
 												<div class="modal-header">
-													<h5 class="modal-title" id="myModalLabel">Default Modal Heading</h5>
+													<h5 class="modal-title" id="myModalLabel">Modifier la photo de profil</h5>
 													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 												</div>
 												<div class="modal-body">
-													Profile Picture code goes here...
+													{{ form_widget(profilePictureForm) }}
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Fermer</button>
-													<button type="button" class="btn btn-primary waves-effect waves-light">Sauvegarder</button>F
+													<button type="submit" class="btn btn-primary waves-effect waves-light">Sauvegarder</button>
 												</div>
+												{{ form_end(profilePictureForm) }}
+
 											</div>
 											<!-- /.modal-content -->
 										</div>
 										<!-- /.modal-dialog -->
 									</div>
 
+
 									<div id="EditPassword" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
 										<div class="modal-dialog">
 											<div class="modal-content">
+													{{ form_start(passwordResetForm) }}
+
 												<div class="modal-header">
 													<h5 class="modal-title" id="myModalLabel">Modifier votre mot de passe</h5>
 													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 												</div>
 												<div class="modal-body">
-													{{ form_start(resetForm) }}
-													{{ form_row(resetForm.plainPassword) }}
-													{{ form_end(resetForm) }}
+													{{ form_row(passwordResetForm.Password) }}
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Fermer</button>
 													<button type="submit" class="btn btn-primary waves-effect waves-light">Sauvegarder</button>
 												</div>
+													{{ form_end(passwordResetForm) }}
+
 											</div>
 											<!-- /.modal-content -->
 										</div>

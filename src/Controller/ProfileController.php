@@ -2,48 +2,92 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Service\FileService;
 use App\Form\PasswordResetType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\ProfilePictureType;
+use App\Repository\UserRepository;
+
+use Doctrine\ORM\EntityManagerInterface;
+
 use Symfony\Component\HttpFoundation\Request;
+
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-
-use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 
 class ProfileController extends AbstractController
 {
 
-    function __construct(private UserPasswordHasherInterface $userPasswordHasher) {
+    function __construct(
+        private UserPasswordHasherInterface $userPasswordHasher,
+        private UserRepository $userRepository,
+        private FileService $fileService
+    ) {
+    }
 
+    
+    private function getUserFromInterface()
+    {
+        return $this->userRepository->findOneBy(["email" => $this->getUser()->getUserIdentifier()]);
     }
 
 
     #[Route('/profile', name: 'app_profile')]
-    public function index(Request $request): Response
+    public function index(Request $request, EntityManagerInterface $em): Response
     {
-        $form = $this->createForm(PasswordResetType::class);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Handle password reset logic here
-            $newPassword = $form->get('plainPassword')->getData();
-            // Update the user's password using the UserPasswordHasherInterface
-            // $user = $this->getUser();
-            // $hashedPassword = $this->userPasswordHasher->hashPassword($user, $newPassword);
-            // $user->setPassword($hashedPassword);
-            // $this->getDoctrine()->getManager()->flush();
+        // we retrieve the user connected
+        $user = $this->getUserFromInterface();
 
-            $this->addFlash('success', 'Password updated successfully');
+        $profilePictureForm = $this->createForm(ProfilePictureType::class, $user);
+        $profilePictureForm->handleRequest($request);
 
-            // Redirect or do whatever you need after password reset
+        if ($profilePictureForm->isSubmitted() && $profilePictureForm->isValid()) {
+            $profilePicture = $request->files->all()['profile_picture']['picture'];
+
+            if ($profilePicture) {
+                // Call the changeUserImageProfile method from the FileService
+                $img = $this->fileService->changeUserImageProfile($user, $profilePicture);
+
+                $this->addFlash('success', 'Profile picture updated successfully');
+            }
         }
 
-        return $this->render('edit-profile.html.twig', [
+        // // Separate forms
+        $passwordResetForm = $this->createForm(PasswordResetType::class , $user);
+        $passwordResetForm->handleRequest($request);
+
+        if ($passwordResetForm->isSubmitted() && $passwordResetForm->isValid()) {
+            $newPassword = $passwordResetForm->get('Password')['first']->getData();
+            $repeatPassword = $passwordResetForm->get('Password')['second']->getData();
+
+            // Check if the passwords match
+            if ($newPassword === $repeatPassword) {
+
+                // Your custom logic for hashing the password
+                $hashedPassword = $this->userPasswordHasher->hashPassword($user, $newPassword);
+                $user->setPassword($hashedPassword);
+
+                // Persist and flush the changes to the database
+                $em->persist($user);
+                $em->flush();
+
+
+                $this->addFlash('success', 'Password updated successfully');
+                return $this->redirectToRoute('app_profile');
+            } else {
+                $this->addFlash('error', 'Passwords do not match');
+                // You might want to handle the error and redirect back to the password reset form
+                return $this->redirectToRoute('app_profile');
+            }
+        }
+
+        return $this->render('profile.html.twig', [
             'controller_name' => 'ProfileController',
-            'resetForm' => $form->createView(),
+            'profilePictureForm' => $profilePictureForm->createView(),
+            'passwordResetForm' => $passwordResetForm->createView(),
         ]);
     }
 }
