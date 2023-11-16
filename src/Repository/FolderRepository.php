@@ -32,12 +32,25 @@ class FolderRepository extends ServiceEntityRepository
             ->leftJoin('f.permissions', 'p')
             ->where('p.user = :user')
             ->orWhere('p.promo = :promo')
+            ->andWhere('f.parent IS NULL')
             ->setParameter('user', $user)
             ->setParameter('promo', $promo)
             ->getQuery()
             ->getResult()
        ;
    }
+
+   /**
+    * @return Folder[] Returns an array of Folder objects
+    */
+    public function getAllBaseUserFolders(): array
+    {
+        return $this->createQueryBuilder('f')
+             ->andWhere('f.parent IS NULL')
+             ->getQuery()
+             ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?Folder
 //    {

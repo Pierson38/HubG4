@@ -23,8 +23,10 @@
         <div class="page-content">
             <div class="container-fluid">
 
-                {{ include('partials/page-title.html.twig', {pagetitle: 'Drive', title: 'Hub'}) }}
+                {{ include('partials/page-title.html.twig', {pagetitle: 'Drive', title: folderBase is defined ? folderBase.name : "Hub"}) }}
 
+
+                {% set noFilesNoFolder = true %}
                 <div class="d-xl-flex">
                     <div class="w-100">
                         <div class="d-md-flex">
@@ -50,8 +52,8 @@
                                                             </a>
 
                                                             <div class="dropdown-menu dropdown-menu-end">
-                                                                <a class="dropdown-item" href="#">Ajouter un fichier</a>
-                                                                <a class="dropdown-item" href="#">Créer un dossier</a>
+                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addFile">Ajouter un fichier</a>
+                                                                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#addNewFolder">Créer un dossier</a>
                                                             </div>
                                                         </div>
                                                         {% endif %}
@@ -65,11 +67,14 @@
                                         <div>
                                             <div class="row">
                                                 {% for folder in folders %}
+                                                {% if folder.permissions[0].isReadable or folder.createdBy == app.user or is_granted("ROLE_PROFESSOR") %}
+                                                {% set noFilesNoFolder = false %}
                                                 <div class="col-xl-4 col-sm-6">
                                                     <a href="{{ path('app_drive_folder', {id:folder.id}) }}">
-                                                        <div class="card shadow-none border">
+                                                        <div class="card shadow-none border" data-type="folder" data-id="{{folder.id}}">
                                                             <div class="card-body p-3">
                                                                 <div class="">
+                                                                    {% if folderBase is defined %}
                                                                     <div class="float-end ms-2">
                                                                         <div class="dropdown mb-2">
                                                                             <button class="font-size-16 text-muted bg-transparent border-0 p-0"
@@ -80,16 +85,20 @@
 
                                                                             <div
                                                                                 class="dropdown-menu dropdown-menu-end">
-                                                                                <button class="dropdown-item"
-                                                                                    href="#">Edit</button>
-                                                                                <button class="dropdown-item"
-                                                                                    href="#">Rename</button>
+                                                                                {% if folder.createdBy == app.user or is_granted("ROLE_PROFESSOR") %}
+                                                                                <button class="dropdown-item permissions-folder-item" data-bs-toggle="modal" data-bs-target="#editPermissionsFolder">Changer les permissions</button>
+                                                                                {% endif %}
+                                                                                {% if folder.permissions[0].isEditable or folder.createdBy == app.user or is_granted("ROLE_PROFESSOR") %}
+                                                                                <button class="dropdown-item rename-item" data-bs-toggle="modal" data-bs-target="#renameFolder">Renomer</button>
+                                                                                {% endif %}
+                                                                                {% if folder.permissions[0].isDeletable or folder.createdBy == app.user or is_granted("ROLE_PROFESSOR") %}
                                                                                 <div class="dropdown-divider"></div>
-                                                                                <button class="dropdown-item"
-                                                                                    href="#">Remove</button>
+                                                                                <button class="dropdown-item remove-item">Supprimer</button>
+                                                                                {% endif %}
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    {% endif %}
                                                                     <div class="avatar-xs me-3 mb-3">
                                                                         <div
                                                                             class="avatar-title bg-transparent rounded">
@@ -108,9 +117,10 @@
                                                                         </div>
                                                                         <div class="align-self-end ms-2">
                                                                             <p class="text-muted mb-0">{{folder.weight}}
-                                                                            </p>
                                                                         </div>
                                                                     </div>
+                                                                    <p class="text-muted mb-0">Dernière modification {{folder.updatedAt|format_datetime('short', 'short', locale="fr")}}
+                                                                    </p>
 
                                                                 </div>
                                                             </div>
@@ -118,7 +128,70 @@
                                                     </a>
                                                 </div>
                                                 <!-- end col -->
+                                                {% endif %}
                                                 {% endfor %}
+                                                {% if folderBase is defined %}
+                                                {% for file in folderBase.files.values %}
+                                                {% set noFilesNoFolder = false %}
+                                                {% if folderBase.permissions[0].isReadable or folderBase.createdBy == app.user or is_granted("ROLE_PROFESSOR") %}
+                                                <div class="col-xl-4 col-sm-6">
+                                                        <div class="card shadow-none border" data-type="file" data-id="{{file.id}}">
+                                                            <div class="card-body p-3" >
+                                                                <div class="">
+                                                                    <div class="float-end ms-2">
+                                                                        <div class="dropdown mb-2">
+                                                                            <button class="font-size-16 text-muted bg-transparent border-0 p-0"
+                                                                                role="button" data-bs-toggle="dropdown"
+                                                                                aria-haspopup="true">
+                                                                                <i class="mdi mdi-dots-horizontal"></i>
+                                                                            </button>
+
+                                                                            <div
+                                                                                class="dropdown-menu dropdown-menu-end">
+                                                                                <button class="dropdown-item download-item">Télécharger</button>
+                                                                                {% if folderBase.permissions[0].isDeletable or folderBase.createdBy == app.user or is_granted("ROLE_PROFESSOR") %}
+                                                                                <div class="dropdown-divider"></div>
+                                                                                <button class="dropdown-item remove-item">Supprimer</button>
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="avatar-xs me-3 mb-3">
+                                                                        <div
+                                                                            class="avatar-title bg-transparent rounded">
+                                                                            <i
+                                                                                class="bx bxs-file font-size-24 text-warning"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="d-flex">
+                                                                        <div class="overflow-hidden me-auto">
+                                                                            <h5 class="font-size-14 text-truncate mb-1">
+                                                                                <p
+                                                                                    class="text-body">{{file.name}}</p>
+                                                                            </h5>
+                                                                            <p class="text-muted text-truncate mb-0">
+                                                                                Ajouter le {{file.createdAt|format_datetime('short', 'short', locale="fr")}}</p>
+                                                                        </div>
+                                                                        <div class="align-self-end ms-2">
+                                                                            <p class="text-muted mb-0">{{file.weight}}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                </div>
+                                                <!-- end col -->
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% endif %}
+
+                                                {% if noFilesNoFolder %}
+                                                <div class="alert alert-info text-center mb-4" role="alert">
+                                                    Ce dossier est vide
+                                                </div>
+                                                {% endif %}
                                             </div>
                                             <!-- end row -->
                                         </div>
@@ -131,8 +204,16 @@
                         </div>
                     </div>
                 </div>
-                <!-- end row -->
-
+                
+                {# Include addFiles.html.twig #}
+                {{ include('drive/modals/addFiles.html.twig') }}
+                {# Include addFolder.html.twig #}
+                {{ include('drive/modals/addFolder.html.twig') }}
+                {# Include renameFolder.html.twig #}
+                {{ include('drive/modals/renameFolder.html.twig') }}
+                {# Include changePermissionsFolder.html.twig #}
+                {{ include('drive/modals/changePermissionsFolder.html.twig') }}
+                
             </div> <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
@@ -150,7 +231,12 @@
 {{ include('partials/vendor-scripts.html.twig') }}
 
 
+<script>
+    folderId = {% if folderBase is defined %}{{folderBase.id}}{% else %}{{"-1"}}{% endif %}
+</script>
 <script src="/js/app.js"></script>
+<script src="/js/pages/drive.js"></script>
+
 
 </body>
 
