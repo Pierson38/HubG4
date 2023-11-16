@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Lbc;
 use App\Entity\Conversations;
 use App\Entity\Courses;
 use App\Entity\Folder;

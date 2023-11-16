@@ -1,0 +1,80 @@
+{{ include('partials/main.html.twig') }}
+
+	<head>
+
+		{{ include('partials/title-meta.html.twig', {title: 'Lbc - Voir une annonce'}) }}
+
+		{{ include('partials/head-css.html.twig') }}
+
+	</head>
+    <style>
+     .btn-primary{
+        background-color: #7472b1;
+    }
+      
+    </style>
+
+	{{ include('partials/body.html.twig') }}
+
+		<!-- Begin page -->
+		<div id="layout-wrapper">
+
+			{{ include('partials/menu.html.twig') }}
+
+			<!-- ============================================================== -->
+			<!-- Start right Content here -->
+			<!-- ============================================================== -->
+			<div class="main-content">
+
+				<div class="page-content">
+					<div class="container-fluid">
+
+						{{ include('partials/page-title.html.twig', {pagetitle: 'Lbc', title: "Voir l'annonce"}) }}
+
+						<div class="row">
+							<div class="col-xl-12">
+                                <div class="card">
+									<div class="card-body">
+                                    
+                                        <h2>Descriptions du produit</h2>
+                                        <div class="product-img position-relative d-flex">
+                                                {% for pictures in product.lbcPictures.values %}
+												<div style="width: 25%; padding: 1em;"> 
+                                                    <img src="{{pictures.name}}" alt=""  class="img-fluid mx-auto d-block"> 
+												</div>
+                                                {% endfor %}
+                                        </div>
+                                        <p>CATEGORIE   : {{product.category}}</p>
+                                        <p>DESCRIPTION : {{product.description}}</p>
+										<p>VENDU PAR : {{product.createdBy}}</p>
+                                        <p>PRIX : {{product.price}}€</p>
+                                        <ul>
+                                    </div>
+                                     <a href="{{ path('app_messengers_create_converstation_user', {id: product.createdBy.id}) }}" class="btn btn-primary">
+                                        Contacter le vendeur
+                                    </a>
+                                </div>
+							</div>
+                            
+						</div>
+					</div> <!-- container-fluid -->
+				</div>
+				<!-- End Page-content -->
+
+
+				{{ include('partials/footer.html.twig') }}
+			</div>
+			<!-- end main content-->
+
+		</div>
+		<!-- END layout-wrapper -->
+
+		{{ include('partials/right-sidebar.html.twig') }}
+
+		{{ include('partials/vendor-scripts.html.twig') }}
+
+		<script src="/js/app.js"></script>
+
+	</body>
+</html>
+
