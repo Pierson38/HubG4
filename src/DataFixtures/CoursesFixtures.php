@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Courses;
+use App\Service\FileService;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -10,6 +11,10 @@ use Faker;
 
 class CoursesFixtures extends Fixture implements DependentFixtureInterface
 {
+    function __construct(private FileService $fileService) {
+        
+    }
+
     public function load(ObjectManager $manager): void
     {
         $faker = Faker\Factory::create();
@@ -27,9 +32,20 @@ class CoursesFixtures extends Fixture implements DependentFixtureInterface
             $courses->setPromo($this->getReference(PromoFixtures::PROMO_REFERENCE . $faker->numberBetween(0, 4)));
             $courses->setCreatedBy($this->getReference(UserFixtures::USER_REFERENCE . 0));
 
+            $promo = $courses->getPromo();
+            
+            $folder = $this->fileService->createDirectory($promo->getFolder(), $courses->getTitle(), $this->getReference(UserFixtures::USER_REFERENCE . 0), [
+                "isReadable" => true,
+                "isEditable" => true,
+                "isDeletable" => false,
+            ]);
+
+            $courses->setFolder($folder);
             $manager->persist($courses);
+            
         }
         $manager->flush();
+       
     }
 
     public function getDependencies()

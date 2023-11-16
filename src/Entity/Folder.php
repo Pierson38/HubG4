@@ -47,6 +47,9 @@ class Folder
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $path = null;
 
+    #[ORM\OneToOne(mappedBy: 'folder', cascade: ['persist', 'remove'])]
+    private ?Promo $promo = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -243,6 +246,23 @@ class Folder
     public function setWeight(string $weight): static
     {
         $this->weight = $weight;
+
+        return $this;
+    }
+
+    public function getPromo(): ?Promo
+    {
+        return $this->promo;
+    }
+
+    public function setPromo(Promo $promo): static
+    {
+        // set the owning side of the relation if necessary
+        if ($promo->getFolder() !== $this) {
+            $promo->setFolder($this);
+        }
+
+        $this->promo = $promo;
 
         return $this;
     }

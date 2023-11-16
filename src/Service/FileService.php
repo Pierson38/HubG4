@@ -40,6 +40,29 @@ class FileService
         return $bytes;
     }
 
+    public function changeUserImageProfile(User $user, UploadedFile $image): string
+    {
+
+        if ($user->getPicture() != null) {
+            $path = $this->appKernel->getProjectDir() . '/public' . $user->getPicture();
+            try {
+                $this->fileSystem->remove($path);
+            } catch (\Throwable $th) {
+                throw $th;
+            }
+        }
+
+        $fileName = md5(uniqid()) . '.' . $image->guessExtension();
+        $image->move(
+            $this->appKernel->getProjectDir() . '/public/uploads/userImages',
+            $fileName
+        );
+        $user->setPicture('/uploads/userImages/' . $fileName);
+        $this->manager->persist($user);
+        $this->manager->flush();
+        return $fileName;
+    }
+
     public function addImageMessage(UploadedFile $file): string
     {
         $fileName = md5(uniqid()) . '.' . $file->guessExtension();
@@ -151,6 +174,8 @@ class FileService
         if (!$this->fileSystem->exists($path)) {
             $this->fileSystem->mkdir($path, 0777, true);
         }
+
+        return $folder;
     }
 
     public function removePromoRepository(Promo $promo)
@@ -194,6 +219,8 @@ class FileService
         if (!$this->fileSystem->exists($path)) {
             $this->fileSystem->mkdir($path, 0777, true);
         }
+
+        return $folder;
     }
 
     public function removeDirectory(Folder $folder)
