@@ -7,6 +7,12 @@
 		{{ include('partials/head-css.html.twig') }}
 
 	</head>
+    <style>
+     .btn-primary{
+        background-color: #7472b1;
+    }
+      
+    </style>
 
 	{{ include('partials/body.html.twig') }}
 
@@ -31,9 +37,18 @@
 									<div class="card-body">
                                     
                                         <h2>Descriptions du produit</h2>
+                                        <div class="product-img position-relative">
+                                                {% for pictures in product.lbcPictures.values %}
+                                                    {% if loop.first %}
+                                                    <img src="{{pictures.name}}" alt="" class="img-fluid mx-auto d-block"> 
+
+                                                    {% endif %}
+
+                                                {% endfor %}
+                                        </div>
                                         <p>CATEGORIE   : {{product.category}}</p>
                                         <p>DESCRIPTION : {{product.description}}</p>
-                                        <p>PRIX : {{product.price}}</p>
+                                        <p>PRIX : {{product.price}}€</p>
                                         <ul>
                                     </div>
                                      <a href="{{ path('app_messengers_create_converstation_user', {id: app.user.id}) }}" class="btn btn-primary">

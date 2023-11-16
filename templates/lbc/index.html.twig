@@ -10,6 +10,30 @@
         {{ include('partials/head-css.html.twig') }}
 
     </head>
+    <style>
+     .categorie{
+        margin-left: 35%;
+        color: black;
+     }
+     .title{
+        margin-left: 1%;
+        color: black;
+     }
+    .card{
+        border-radius: 10px; 
+        border: 1px solid #ccc;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        height: 90%;
+    }
+    .cards{
+        border-radius: 10px; 
+        border: 1px solid #ccc;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        height: 25%;
+    }
+    </style>
 
     {{ include('partials/body.html.twig') }}
 
@@ -26,11 +50,11 @@
                 <div class="page-content">
                     <div class="container-fluid">
 
-                        {{ include('partials/page-title.html.twig', {pagetitle: 'Ecommerce', title: 'Products'}) }}
+                        {{ include('partials/page-title.html.twig', {pagetitle: '', title: ''}) }}
 
                         <div class="row">
                             <div class="col-lg-3">
-                                <div class="card">
+                                <div class="cards">
                                     <div class="card-body">
                                         <h4 class="card-title mb-4">Filter</h4>
                                             
@@ -41,7 +65,7 @@
                                                         <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Mobilier</a></li>
                                                         <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Transport</a></li>
                                                     </ul>
-                                                    <a href="{{path("app_lbc_create")}}" class="btn btn-primary">Créer une annonce</a>
+                                                  <a href="{{path("app_lbc_create")}}" class="btn btn-primary" id="first">Créer une annonce</a>
                                                 </div>
                                             
                                     
@@ -56,34 +80,16 @@
                                             <h5>All</h5>
                                         </div>
                                     </div>
-                                    <div class="col-lg-8 col-sm-6">
-                                        <form class="mt-4 mt-sm-0 float-sm-end d-sm-flex align-items-center">
-                                            <div class="search-box me-2">
-                                                <div class="position-relative">
-                                                    <input type="text" class="form-control border-0" placeholder="Search...">
-                                                    <i class="bx bx-search-alt search-icon"></i>
-                                                </div>
-                                            </div>
-                                            <ul class="nav nav-pills product-view-nav justify-content-end mt-3 mt-sm-0">
-                                                <li class="nav-item">
-                                                    <a class="nav-link active" href="#"><i class="bx bx-grid-alt"></i></a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" href="#"><i class="bx bx-list-ul"></i></a>
-                                                </li>
-                                            </ul>
-                                            
-                                            
-                                        </form>
-                                    </div>
                                 </div>
                                 <div class="row">
+                                
                                     {% for product in products %}
                                         <div class="col-xl-4 col-sm-6">
+                                         <a href="{{path("app_lbc_detail", {'id': product.id})}}" title="Voir les détails">
                                         <div class="card">
                                             <div class="card-body">
                                             {% if product.category %}
-                                                     <p>{{product.category}}</p>
+                                                     <p class="categorie">{{product.category}}</p>
                                                      {% endif %}
                                                 <div class="product-img position-relative">
                                                 {% for pictures in product.lbcPictures.values %}
@@ -95,11 +101,11 @@
                                                 {% endfor %}
                                                 </div>
                                                 <div class="mt-4 text-center">
-                                                    <h5 class="mb-3 text-truncate"><a href="javascript: void(0);" class="text-dark">{{product.title}} </a></h5>
-                                                    <h5 class="my-0"><span class="text-muted me-2"></span> {{product.price}}</h5>
-                                                     <!--<p>{{product.description}}</p>-->
+                                                    <h5 class="mb-3 text-truncate"><a href="javascript: void(0);" class="text-dark"><p class="title">{{product.title}}</p></a></h5>
+                                                    <h5 class="my-0"><span class="text-muted me-2"></span> {{product.price}}€</h5>
                                                      
-                                                     <a href="{{path("app_lbc_detail", {'id': product.id})}}" title="Voir les détails" class="btn btn-primary">Voir le détail</a><br>
+                                                     
+                                                    
 
 
                                                      {% if app.user == product.createdBy %}
@@ -110,6 +116,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        </a>
                                     </div>
                                     {% endfor %}
                                      <!-- //product.category -->

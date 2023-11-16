@@ -92,8 +92,7 @@ class LBCController extends AbstractController
     }
 
     
-    #[Route('/lbc/detail/{id}', name:"app_lbc_detail")]
-    public function showProductDetail(Lbc  $product): Response
+    #[Route('/lbc/detail/{id}', name:"app_lbc_detail")]public function showProductDetail(Lbc  $product): Response
    {
        
        return $this->render('lbc/detail.html.twig', [
