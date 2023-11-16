@@ -18,27 +18,35 @@ class CreateEventType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Titre'
+                'label' => 'Titre',
+                'attr' => ['class' => 'form-control']
             ])
             ->add('description', TextareaType::class, [
                 'required' => false,
-                'label' => 'Description (optional)'
+                'label' => 'Description (optional)',
+                'attr' => ['class' => 'form-control']
             ])
             ->add('location', TextType::class, [
                 'required' => false,
-                'label' => 'Lieu (optional)'
-            ])
-            ->add('link', TextType::class, [
-                'required' => false,
-                'label' => 'Lien (optional)'
+                'label' => 'Lieu',
+                'attr' => ['class' => 'form-control']
             ])
             ->add('startAt', null, [
-                'label' => 'Début',
+                'label' => 'Date de début',
+                'widget' => 'choice',
+                'attr' => [
+                    'class' => 'form-control',
+                    'style' => 'max-height: 100px; overflow-y: auto; border: none;'
+                ],
             ])
             ->add('endAt', null, [
-                'label' => 'Fin',
-            ])
-        ;
+                'label' => 'Date de fin',
+                'widget' => 'choice',
+                'attr' => [
+                    'class' => 'form-control',
+                    'style' => 'max-height: 100px; overflow-y: auto; border: none;'
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
