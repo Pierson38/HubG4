@@ -7,10 +7,15 @@ File: Form editor Js File
 */
 
 $(document).ready(function () {
-    if($("#elm1").length > 0){
+    if($("#create_post_content").length > 0){
         tinymce.init({
-            selector: "textarea#elm1",
-            height:300,
+            selector: "textarea#create_post_content",
+            height:600,
+            setup: function (editor) {
+                editor.on('change', function () {
+                    editor.save();
+                });
+            },
             plugins: [
                 "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
                 "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",

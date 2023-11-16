@@ -30,6 +30,9 @@ class Files
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $createdBy = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $extension = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -96,6 +99,18 @@ class Files
     public function setCreatedBy(?User $createdBy): static
     {
         $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getExtension(): ?string
+    {
+        return $this->extension;
+    }
+
+    public function setExtension(string $extension): static
+    {
+        $this->extension = $extension;
 
         return $this;
     }

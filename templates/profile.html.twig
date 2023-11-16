@@ -1,0 +1,121 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+
+	{{ include('partials/title-meta.html.twig', {title: 'Profile'}) }}
+
+	{{ include('partials/head-css.html.twig') }}
+
+</head>
+
+{{ include('partials/body.html.twig') }}
+
+<!-- Begin page -->
+<div id="layout-wrapper">
+
+	{{ include('partials/menu.html.twig') }}
+
+	<!-- ============================================================== -->
+	<!-- Start right Content here -->
+	<!-- ============================================================== -->
+
+		<div class="main-content"> <div class="page-content">
+			<div class="container-fluid">
+
+				{{ include('partials/page-title.html.twig', {pagetitle: 'Edit', title: 'Profile'}) }}
+
+
+				<div>
+					<div>
+						<div class="bg-primary bg-soft">
+							<div class="row">
+								<div class="col-7">
+									<div class="text-primary p-3">
+										<h1>{{app.user.campus.name}}</h1>
+										<h4>{{app.user.promo.name }}</h4>
+									</div>
+								</div>
+								<div
+									class="col-5 align-self-end">
+									{# Add the profile picture of the user logged #}
+									<img src="/images/profile-img.png" alt="" class="img-fluid">
+								</div>
+							</div>
+						</div>
+						<div class="card-body pt-0">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="avatar-md profile-user-wid mb-4">
+										<img src="{{app.user.picture}}" alt="" class="img-thumbnail rounded-circle">
+									</div>
+									<h5 class="font-size-15">
+										{{app.user.firstName }}
+										{{app.user.lastName }}</h5>
+									<p class="">Email :
+										{{app.user.email }}</p>
+								</div>
+
+								<div>
+									<button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#EditPicture">Modifier photo de profil</button>
+									<button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#EditPassword">Modifier Mot de passe</button>
+
+									<div id="EditPicture" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												{{ form_start(profilePictureForm) }}
+												<div class="modal-header">
+													<h5 class="modal-title" id="myModalLabel">Modifier la photo de profil</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													{{ form_widget(profilePictureForm) }}
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Fermer</button>
+													<button type="submit" class="btn btn-primary waves-effect waves-light">Sauvegarder</button>
+												</div>
+												{{ form_end(profilePictureForm) }}
+
+											</div>
+											<!-- /.modal-content -->
+										</div>
+										<!-- /.modal-dialog -->
+									</div>
+
+
+									<div id="EditPassword" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+													{{ form_start(passwordResetForm) }}
+
+												<div class="modal-header">
+													<h5 class="modal-title" id="myModalLabel">Modifier votre mot de passe</h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													{{ form_row(passwordResetForm.Password) }}
+												</div>
+												<div class="modal-footer">
+													<button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Fermer</button>
+													<button type="submit" class="btn btn-primary waves-effect waves-light">Sauvegarder</button>
+												</div>
+													{{ form_end(passwordResetForm) }}
+
+											</div>
+											<!-- /.modal-content -->
+										</div>
+										<!-- /.modal-dialog -->
+									</div>
+
+
+									<!-- /.modal -->
+								</div>
+								<!-- end preview-->
+
+
+							</div>
+						</div>
+					</div>
+					<!-- end card -->
+				</div>
+			</div><!-- end row --></div><!-- container-fluid --></div><!-- End Page-content -->{{ include('partials/footer.html.twig') }}</div><!-- end main content--></div><!-- END layout-wrapper -->{{ include('partials/right-sidebar.html.twig') }}{{ include('partials/vendor-scripts.html.twig') }}<!-- apexcharts --><script src="/libs/apexcharts/apexcharts.min.js"></script><script src="/js/pages/profile.init.js"></script><!-- App js --><script src="/js/app.js"></script></body></html>
