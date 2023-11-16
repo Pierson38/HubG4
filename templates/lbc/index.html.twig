@@ -33,15 +33,18 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <h4 class="card-title mb-4">Filter</h4>
-
-                                        <div>
-                                            <ul class="list-unstyled product-list">
-                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i>Informatique</a></li>
-                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Appartement</a></li>
-                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Mobilier</a></li>
-                                                <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Transport</a></li>
-                                            </ul>
-                                        </div>
+                                            
+                                                <div>
+                                                    <ul class="list-unstyled product-list">
+                                                        <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i>Informatique</a></li>
+                                                        <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Appartement</a></li>
+                                                        <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Mobilier</a></li>
+                                                        <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Transport</a></li>
+                                                    </ul>
+                                                    <a href="{{path("app_lbc_create")}}" class="btn btn-primary">Créer une annonce</a>
+                                                </div>
+                                            
+                                    
                                     </div>
                                 </div>
                             </div>
@@ -75,24 +78,41 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                            
                                     {% for product in products %}
                                         <div class="col-xl-4 col-sm-6">
                                         <div class="card">
                                             <div class="card-body">
+                                            {% if product.category %}
+                                                     <p>{{product.category}}</p>
+                                                     {% endif %}
                                                 <div class="product-img position-relative">
-                                                    <img src="/images/product/img-1.png" alt="" class="img-fluid mx-auto d-block">
+                                                {% for pictures in product.lbcPictures.values %}
+                                                    {% if loop.first %}
+                                                    <img src="{{pictures.name}}" alt="" class="img-fluid mx-auto d-block"> 
+
+                                                    {% endif %}
+
+                                                {% endfor %}
                                                 </div>
                                                 <div class="mt-4 text-center">
                                                     <h5 class="mb-3 text-truncate"><a href="javascript: void(0);" class="text-dark">{{product.title}} </a></h5>
                                                     <h5 class="my-0"><span class="text-muted me-2"></span> {{product.price}}</h5>
-                                                     <p>{{product.description}}</p>
+                                                     <!--<p>{{product.description}}</p>-->
+                                                     
+                                                     <a href="{{path("app_lbc_detail", {'id': product.id})}}" title="Voir les détails" class="btn btn-primary">Voir le détail</a><br>
+
+
+                                                     {% if app.user == product.createdBy %}
+                                                        <a href="{{ path('app_lbc_edit', {'id': product.id}) }}">Modifier le produit</a>
+                                                        /<a href="{{ path('app_lbc_delete', {'id': product.id}) }}">Supprimer le produit</a>
+                                                    {% endif %}
+                                                     
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     {% endfor %}
-                                    
+                                     <!-- //product.category -->
                             </div>
                         </div>
                         <!-- end row -->
