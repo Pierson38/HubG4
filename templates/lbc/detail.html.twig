@@ -2,7 +2,7 @@
 
 	<head>
 
-		{{ include('partials/title-meta.html.twig', {title: 'Lbc - Créer une annonce'}) }}
+		{{ include('partials/title-meta.html.twig', {title: 'Lbc - Voir une annonce'}) }}
 
 		{{ include('partials/head-css.html.twig') }}
 
@@ -29,7 +29,7 @@
 				<div class="page-content">
 					<div class="container-fluid">
 
-						{{ include('partials/page-title.html.twig', {pagetitle: 'Lbc', title: "Détail de l'annonce"}) }}
+						{{ include('partials/page-title.html.twig', {pagetitle: 'Lbc', title: "Voir l'annonce"}) }}
 
 						<div class="row">
 							<div class="col-xl-12">
@@ -37,21 +37,20 @@
 									<div class="card-body">
                                     
                                         <h2>Descriptions du produit</h2>
-                                        <div class="product-img position-relative">
+                                        <div class="product-img position-relative d-flex">
                                                 {% for pictures in product.lbcPictures.values %}
-                                                    {% if loop.first %}
-                                                    <img src="{{pictures.name}}" alt="" class="img-fluid mx-auto d-block"> 
-
-                                                    {% endif %}
-
+												<div style="width: 25%; padding: 1em;"> 
+                                                    <img src="{{pictures.name}}" alt=""  class="img-fluid mx-auto d-block"> 
+												</div>
                                                 {% endfor %}
                                         </div>
                                         <p>CATEGORIE   : {{product.category}}</p>
                                         <p>DESCRIPTION : {{product.description}}</p>
+										<p>VENDU PAR : {{product.createdBy}}</p>
                                         <p>PRIX : {{product.price}}€</p>
                                         <ul>
                                     </div>
-                                     <a href="{{ path('app_messengers_create_converstation_user', {id: app.user.id}) }}" class="btn btn-primary">
+                                     <a href="{{ path('app_messengers_create_converstation_user', {id: product.createdBy.id}) }}" class="btn btn-primary">
                                         Contacter le vendeur
                                     </a>
                                 </div>

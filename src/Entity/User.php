@@ -95,6 +95,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Messages::class, orphanRemoval: true)]
     private Collection $messages;
 
+    public function __toString()
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
+
     public function __construct()
     {
         $this->coursesProfessor = new ArrayCollection();

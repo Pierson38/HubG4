@@ -50,41 +50,15 @@
                 <div class="page-content">
                     <div class="container-fluid">
 
-                        {{ include('partials/page-title.html.twig', {pagetitle: '', title: ''}) }}
+                        {{ include('partials/page-title.html.twig', {pagetitle: 'Lbc', title: 'Hub'}) }}
 
                         <div class="row">
-                            <div class="col-lg-3">
-                                <div class="cards">
-                                    <div class="card-body">
-                                        <h4 class="card-title mb-4">Filter</h4>
-                                            
-                                                <div>
-                                                    <ul class="list-unstyled product-list">
-                                                        <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i>Informatique</a></li>
-                                                        <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Appartement</a></li>
-                                                        <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Mobilier</a></li>
-                                                        <li><a href="javascript: void(0);"><i class="mdi mdi-chevron-right me-1"></i> Transport</a></li>
-                                                    </ul>
-                                                  <a href="{{path("app_lbc_create")}}" class="btn btn-primary" id="first">Créer une annonce</a>
-                                                </div>
-                                            
-                                    
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-9">
-                                    
-                                <div class="row mb-3">
-                                    <div class="col-xl-4 col-sm-6">
-                                        <div class="mt-2">
-                                            <h5>All</h5>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="col-lg-12">
                                 <div class="row">
+                                    <a href="{{path("app_lbc_create")}}" class="btn btn-primary mb-4" id="first">Créer une annonce</a>
                                 
                                     {% for product in products %}
-                                        <div class="col-xl-4 col-sm-6">
+                                        <div class="col-xl-3 col-sm-6">
                                          <a href="{{path("app_lbc_detail", {'id': product.id})}}" title="Voir les détails">
                                         <div class="card">
                                             <div class="card-body">
