@@ -14,12 +14,15 @@ use App\Repository\UserRepository;
 use App\Service\ConversationService;
 use App\Service\FileService;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Security('is_granted("ROLE_COP")')]
+#[Route('/admin')]
 class AdminController extends AbstractController
 {
 
@@ -33,7 +36,7 @@ class AdminController extends AbstractController
     }
 
 
-    #[Route('/admin', name: 'app_admin')]
+    #[Route('', name: 'app_admin')]
     public function index(): Response
     {
         return $this->render('admin/index.html.twig', [
@@ -41,7 +44,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/users', name: 'app_admin_users')]
+    #[Route('/users', name: 'app_admin_users')]
     public function adminUsers(UserRepository $userRepository): Response
     {
         $users = $userRepository->findAll();
@@ -50,7 +53,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/users/create', name: 'app_admin_users_create')]
+    #[Route('/users/create', name: 'app_admin_users_create')]
     public function adminUsersCreate(EntityManagerInterface $manager, Request $request, UserPasswordHasherInterface $userPasswordHasher, FileService $fileService): Response
     {
 
@@ -82,7 +85,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/users/edit/{id}', name: 'app_admin_users_edit')]
+    #[Route('/users/edit/{id}', name: 'app_admin_users_edit')]
     public function adminUsersEdit(User $user, EntityManagerInterface $manager, Request $request): Response
     {
 
@@ -104,7 +107,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/users/delete/{id}', name: 'app_admin_users_delete')]
+    #[Route('/users/delete/{id}', name: 'app_admin_users_delete')]
     public function adminUsersDelete(User $user, EntityManagerInterface $manager, FileService $fileService): Response
     {
         if ($user == $this->getUserFromInterface()) {
@@ -119,7 +122,7 @@ class AdminController extends AbstractController
         return $this->redirectToRoute("app_admin_users");
     }
 
-    #[Route('/admin/courses', name: 'app_admin_courses')]
+    #[Route('/courses', name: 'app_admin_courses')]
     public function adminCourses(CoursesRepository $coursesRepository, PromoRepository $promoRepository): Response
     {
         $promos = $promoRepository->findAll();
@@ -131,7 +134,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/courses/create', name: 'app_admin_courses_create')]
+    #[Route('/courses/create', name: 'app_admin_courses_create')]
     public function adminCoursesCreate(EntityManagerInterface $manager, Request $request, UserPasswordHasherInterface $userPasswordHasher): Response
     {
 
@@ -161,7 +164,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/courses/edit/{id}', name: 'app_admin_courses_edit')]
+    #[Route('/courses/edit/{id}', name: 'app_admin_courses_edit')]
     public function adminCoursesEdit(Courses $course, EntityManagerInterface $manager, Request $request): Response
     {
         $tags = $course->getTags();
@@ -195,7 +198,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/courses/delete/{id}', name: 'app_admin_courses_delete')]
+    #[Route('/courses/delete/{id}', name: 'app_admin_courses_delete')]
     public function adminCoursesDelete(Courses $courses, EntityManagerInterface $manager): Response
     {
         $manager->remove($courses);
@@ -204,7 +207,7 @@ class AdminController extends AbstractController
         return $this->redirectToRoute("app_admin_courses");
     }
 
-    #[Route('/admin/promos', name: 'app_admin_promos')]
+    #[Route('/promos', name: 'app_admin_promos')]
     public function adminPromos(PromoRepository $promoRepository): Response
     {
         $promos = $promoRepository->findAll();
@@ -213,7 +216,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/promos/create', name: 'app_admin_promos_create')]
+    #[Route('/promos/create', name: 'app_admin_promos_create')]
     public function adminPromosCreate(EntityManagerInterface $manager, Request $request, FileService $fileService): Response
     {
 
@@ -238,7 +241,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/promos/edit/{id}', name: 'app_admin_promos_edit')]
+    #[Route('/promos/edit/{id}', name: 'app_admin_promos_edit')]
     public function adminPromosEdit(Promo $promo, EntityManagerInterface $manager, Request $request): Response
     {
         $form = $this->createForm(PromosType::class, $promo);
@@ -259,7 +262,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/promos/delete/{id}', name: 'app_admin_promos_delete')]
+    #[Route('/promos/delete/{id}', name: 'app_admin_promos_delete')]
     public function adminPromosDelete(Promo $promo, EntityManagerInterface $manager, FileService $fileService): Response
     {
         $fileService->removePromoRepository($promo);
