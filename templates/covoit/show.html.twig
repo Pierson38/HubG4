@@ -1,0 +1,137 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+
+	{{ include('partials/title-meta.html.twig', {title: 'Covoiturage'}) }}
+
+	{{ include('partials/head-css.html.twig') }}
+
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+	<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+
+
+</head>
+
+<style>
+	.leaflet-control-container {
+    display: none;
+}
+</style>
+
+{{ include('partials/body.html.twig') }}
+
+<!-- Begin page -->
+<div id="layout-wrapper">
+
+	{{ include('partials/menu.html.twig') }}
+
+	<!-- ============================================================== -->
+	<!-- Start right Content here -->
+	<!-- ============================================================== -->
+		<div class="main-content"> <div class="page-content">
+			<div class="container-fluid">
+
+				{{ include('partials/page-title.html.twig', {pagetitle: 'Covoiturage', title: 'Hub'}) }}
+
+				<div class="row">
+					<div class="col-xl-4">
+						<div class="card">
+							<div class="card-body">
+								<h4 class="card-title">{{carpool.fromLocation ~ " -> " ~ carpool.toLocation}}</h4>
+								<p class="card-text">{{carpool.date|format_datetime('long', 'short', locale="fr")}}</p>
+								<p>Proposé par : {{carpool.createdBy}}</p>
+								<p class="card-text">{{carpool.carpoolMembers|length}}
+									/
+									{{carpool.places}}
+									places</p>
+							</div>
+						</div>
+						<div class="card">
+							<div class="card-body">
+								<h4 class="card-title">Membres</h4>
+								<div class="table-responsive">
+									<table class="table align-middle table-nowrap table-hover">
+										<tbody>
+											{% for member in carpool.carpoolMembers.values %}
+												<tr>
+													<td><img src="{{member.user.picture}}" alt="" class="avatar-sm"></td>
+													<td>{{member.user.firstname}} {{member.user.lastname}}</td>
+													<td><a href="javascript: void(0);" class="badge {{member.isAccepted ? "badge-soft-success": "badge-soft-secondary"}} font-size-11 m-1">{{member.isAccepted ? "Accepté" : "En attente"}}</a></td>
+													<td>
+
+														<a class="font-size-20" href="{{path('app_messengers_create_converstation_user', {id: member.user.id})}}">
+															<i class="bx bx-message-square-dots"></i>
+														</a>
+
+													</td>
+												</tr>
+											{% else %}
+
+												<p class="card-text">Aucun membre</p>
+											{% endfor %}
+										</tbody>
+
+									</table>
+								</div>
+							</div>
+						</div>
+
+						<div class="card">
+							<a href="{{ path('app_covoit_join', {id: carpool.id}) }}" class="btn btn-primary">Demander à rejoindre</a>
+							<a href="{{ path('app_messengers_create_converstation_user', {id: carpool.createdBy.id}) }}" class="btn btn-secondary mt-2">Contacter la personne</a>
+							{% if carpool.createdBy == app.user %}
+							<a href="{{ path('app_covoit_edit', {id: carpool.id}) }}" class="btn btn-primary mt-2">Modifier</a>
+							<a href="{{ path('app_covoit_delete', {id: carpool.id}) }}" class="btn btn-danger mt-2">Supprimer</a>
+							{% endif %}
+						</div>
+					</div>
+					<div class="col-xl-8">
+						<div class="card">
+							<div class="card-body">
+								{% if carpool.fromLat != null and carpool.toLat != null %}
+								<div id="map" style="width: 100%; height: 50vh;"></div>
+								{% else %}
+								<p>La carte n'est pas disponible</p>
+								{% endif %}
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<!-- container-fluid -->
+		</div>
+		<!-- End Page-content -->
+
+
+		{{ include('partials/footer.html.twig') }}
+		<script>
+			coordonates = {
+				from: {
+					lat: {{carpool.fromLat}},
+					lng: {{carpool.fromLong}}
+				},
+				to: {
+					lat: {{carpool.toLat}},
+					lng: {{carpool.toLong}}
+				}
+			}
+		
+		</script>
+	</div>
+	<!-- end main content-->
+
+</div>
+<!-- END layout-wrapper -->
+
+{{ include('partials/right-sidebar.html.twig') }}
+
+{{ include('partials/vendor-scripts.html.twig') }}
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+
+
+<script src="/js/app.js"></script>
+<script src="/js/pages/carpool.js"></script>
+</body></html>

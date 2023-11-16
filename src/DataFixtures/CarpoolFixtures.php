@@ -16,8 +16,8 @@ class CarpoolFixtures extends Fixture implements DependentFixtureInterface
         $faker = Faker\Factory::create();
         for ($i=0; $i < 20; $i++) { 
             $carpool = new Carpool();
-            $carpool->setFromLocation($faker->address);
-            $carpool->setToLocation($faker->address);
+            $carpool->setFromLocation($faker->city);
+            $carpool->setToLocation($faker->city);
             $carpool->setDate(new \DateTimeImmutable($faker->dateTimeBetween('now', '+1 year')->format('Y-m-d H:i:s')));
             $carpool->setPlaces($faker->numberBetween(1, 5));
             $carpool->setPrice($faker->numberBetween(1, 100));

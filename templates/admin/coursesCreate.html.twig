@@ -60,7 +60,8 @@
 				<!-- End Page-content -->
 
 				<script>
-					document.getElementById('add_sub_element').addEventListener('click', function() {
+					document.addEventListener('DOMContentLoaded', function() {
+						document.getElementById('add_sub_element').addEventListener('click', function() {
 						var collectionHolder = document.getElementById('tags');
 						var newForm = collectionHolder.dataset.prototype;
 
@@ -79,7 +80,7 @@
 
 						newFormDiv.appendChild(removeButton);
 						collectionHolder.appendChild(newFormDiv);
-
+						});
 						// Ajoutez ici le code pour gérer le bouton de suppression si nécessaire
 						document.querySelectorAll('.remove-sub-element').forEach(function(button) {
 							button.addEventListener('click', function() {

@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
                 }
             }).done(function (responseData) {
-
                 responseData.forEach(element => {
                     element = JSON.parse(element);
                     $.ajax({

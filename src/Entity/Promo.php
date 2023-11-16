@@ -27,6 +27,10 @@ class Promo
     #[ORM\OneToMany(mappedBy: 'promo', targetEntity: Permissions::class)]
     private Collection $permissions;
 
+    #[ORM\OneToOne(inversedBy: 'promo', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Folder $folder = null;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -137,6 +141,18 @@ class Promo
                 $permission->setPromo(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFolder(): ?Folder
+    {
+        return $this->folder;
+    }
+
+    public function setFolder(Folder $folder): static
+    {
+        $this->folder = $folder;
 
         return $this;
     }
