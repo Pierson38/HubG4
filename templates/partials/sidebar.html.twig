@@ -7,7 +7,60 @@
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
             <ul class="metismenu list-unstyled" id="side-menu">
-                <li class="menu-title" key="t-menu">{% trans %}Menu{% endtrans %}</li>
+                <li class="menu-title" key="t-apps">{% trans %}HubG4{% endtrans %}</li>
+
+                <li>
+                    <a href="{{path('app_messagerie')}}" class="waves-effect">
+                        <i class="bx bx-chat"></i>
+                        <span key="t-calendar">Messages</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{path('app_courses')}}" class="waves-effect">
+                        <i class="bx bx-task"></i>
+                        <span key="t-calendar">Cours</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{path('app_calendar')}}" class="waves-effect">
+                        <i class="bx bx-calendar"></i>
+                        <span key="t-calendar">Calendrier</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{path('app_forum')}}" class="waves-effect">
+                        <i class="bx bx-file"></i>
+                        <span key="t-calendar">Forum</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{path('app_drive')}}" class="waves-effect">
+                        <i class="bx bx-folder"></i>
+                        <span key="t-calendar">Drive</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{path('app_covoit')}}" class="waves-effect">
+                        <i class="bx bx-bus"></i>
+                        <span key="t-calendar">Covoiturage</span>
+                    </a>
+                </li>
+
+                {% if is_granted('ROLE_COP') %}
+                <li>
+                    <a href="{{path('app_admin')}}" class="waves-effect">
+                        <i class="bx bx-home-circle"></i>
+                        <span key="t-calendar">Administration</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {# <li class="menu-title" key="t-menu">{% trans %}Menu{% endtrans %}</li>
 
                 <li>
                     <a href="javascript: void(0);" class="waves-effect">
@@ -53,9 +106,9 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> #}
 
-                <li class="menu-title" key="t-apps">{% trans %}Apps{% endtrans %}</li>
+                {# <li class="menu-title" key="t-apps">{% trans %}Apps{% endtrans %}</li>
 
                 <li>
                     <a href="calendar" class="waves-effect">
@@ -359,7 +412,7 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> #}
 
             </ul>
         </div>

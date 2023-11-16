@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Folder;
+use App\Entity\Promo;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,20 +23,34 @@ class FolderRepository extends ServiceEntityRepository
         parent::__construct($registry, Folder::class);
     }
 
-//    /**
-//     * @return Folder[] Returns an array of Folder objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('f')
-//            ->andWhere('f.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('f.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /**
+    * @return Folder[] Returns an array of Folder objects
+    */
+   public function getBaseUserFolders(User $user, Promo $promo): array
+   {
+       return $this->createQueryBuilder('f')
+            ->leftJoin('f.permissions', 'p')
+            ->where('p.user = :user')
+            ->orWhere('p.promo = :promo')
+            ->andWhere('f.parent IS NULL')
+            ->setParameter('user', $user)
+            ->setParameter('promo', $promo)
+            ->getQuery()
+            ->getResult()
+       ;
+   }
+
+   /**
+    * @return Folder[] Returns an array of Folder objects
+    */
+    public function getAllBaseUserFolders(): array
+    {
+        return $this->createQueryBuilder('f')
+             ->andWhere('f.parent IS NULL')
+             ->getQuery()
+             ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?Folder
 //    {

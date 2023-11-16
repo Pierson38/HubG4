@@ -1,0 +1,136 @@
+{{ include('partials/main.html.twig') }}
+
+<head>
+
+    {{ include('partials/title-meta.html.twig', {title: 'Admin - Liste des cours'}) }}
+
+    {{ include('partials/head-css.html.twig') }}
+
+</head>
+
+{{ include('partials/body.html.twig') }}
+
+<!-- Begin page -->
+<div id="layout-wrapper">
+
+    {{ include('partials/menu.html.twig') }}
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="main-content">
+
+        <div class="page-content">
+            <div class="container-fluid">
+
+                {{ include('partials/page-title.html.twig', {pagetitle: 'Admin', title: 'Cours'}) }}
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <a href="{{path("app_admin_courses_create")}}" class="btn btn-primary mb-4"
+                                    style="width: 100%;">Ajouter un cours</a>
+                                {% if courses %}
+                                {% for promo in promos %}
+                                <h2>{{promo.name}}</h2>
+                                <div class="table-responsive">
+                                    <table class="table align-middle table-nowrap table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col">Nom</th>
+                                                <th scope="col">De</th>
+                                                <th scope="col">À</th>
+                                                <th scope="col">Professeur</th>
+                                                <th scope="col">Salle</th>
+                                                <th scope="col">Tags</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% set count = 0 %}
+                                            {% for course in courses %}
+                                            {% if course.promo == promo %}
+                                            {% set count = count + 1 %}
+                                            <tr>
+                                                <td>
+                                                    <h5 class="font-size-14 mb-1"><a href="javascript: void(0);"
+                                                            class="text-dark">{{course.title}}</a></h5>
+                                                </td>
+                                                <td>{{course.startAt|format_datetime('short', 'short', locale="fr")}}
+                                                </td>
+                                                <td>{{course.endAt|format_datetime('short', 'short', locale="fr")}}</td>
+                                                <td>{{course.professor.firstname ~ " " ~ course.professor.lastname}}
+                                                </td>
+                                                <td>{{course.classroom}}</td>
+                                                <td>
+                                                    <div>
+                                                        {% for tag in course.tags %}
+                                                            <a href="javascript: void(0);" class="badge badge-soft-primary font-size-11 m-1">
+                                                                {{ tag }}
+                                                            </a> 
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <ul class="list-inline font-size-20 contact-links mb-0">
+                                                        <li class="list-inline-item px-2">
+                                                            <a href="{{path("app_courses_single", {id: course.id})}}"
+                                                                title="Voir"><i class="bx bx-search"></i></a>
+                                                        </li>
+                                                        <li class="list-inline-item px-2">
+                                                            <a href="{{path("app_admin_courses_edit", {id: course.id})}}" title="Edit"><i class="bx bx-pencil"></i></a>
+                                                        </li>
+                                                        <li class="list-inline-item px-2">
+                                                            <a href="{{path("app_admin_courses_delete", {id: course.id})}}" title="Delete"><i class="bx bx-trash"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>{% endif %}
+                                                {% endfor %}
+                                                {% if count == 0 %}
+                                                <tr>
+                                                    <td colspan="7">
+                                                        <div class="alert alert-info mb-0" role="alert">
+                                                            <strong>Information :</strong> Vous n'avez pas encore de cours.
+                                                        </div>
+                                                    </td>{% endif %}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="alert alert-info mb-0" role="alert">
+                                            <strong>Information :</strong> Vous n'avez pas encore de cours.
+                                        </div>
+                                    </td>
+                                    {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- container-fluid -->
+        </div>
+        <!-- End Page-content -->
+
+
+        {{ include('partials/footer.html.twig') }}
+    </div>
+    <!-- end main content-->
+
+</div>
+<!-- END layout-wrapper -->
+
+{{ include('partials/right-sidebar.html.twig') }}
+
+{{ include('partials/vendor-scripts.html.twig') }}
+
+<!-- App js -->
+<script src="/js/app.js"></script>
+
+</body>
+
+</html>

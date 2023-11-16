@@ -1,0 +1,179 @@
+{{ include('partials/main.html.twig') }}
+
+    <head>
+        
+        {{ include('partials/title-meta.html.twig', {title: 'Admin - Forum'}) }}
+
+        {{ include('partials/head-css.html.twig') }}
+
+        <link
+        href="/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+    
+        <!-- Responsive datatable examples -->
+        <link href="/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css"/>
+
+    </head>
+
+    {{ include('partials/body.html.twig') }}
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+
+            {{ include('partials/menu.html.twig') }}
+
+            <!-- ============================================================== -->
+            <!-- Start right Content here -->
+            <!-- ============================================================== -->
+            <div class="main-content">
+
+                <div class="page-content">
+                    <div class="container-fluid">
+
+						{{ include('partials/page-title.html.twig', {pagetitle: 'Admin', title: 'Forum'}) }}
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h3>Posts</h3>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover dt-responsive datatable nowrap w-100">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Titre</th>
+                                                        <th scope="col">Créer le</th>
+                                                        <th scope="col">Dernière activité</th>
+                                                        <th scope="col">Nombre de commentaires</th>
+                                                        <th scope="col">Nombre de report</th>
+                                                        <th scope="col">Créer par</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+        
+                                                <tbody>
+                                                    {% for post in posts %}
+                                                        <tr>
+                                                            <td>
+                                                                <h5 class="text-truncate font-size-14">
+                                                                    <a href="{{path("app_forum_single_post", {id: post.id})}}" class="text-dark">{{post.title}}</a>
+                                                                </h5>
+                                                            </td>
+                                                            <td>{{post.createdAt|format_datetime('short', 'short', locale="fr")}}</td>
+                                                            <td>{{post.updatedAt|format_datetime('short', 'short', locale="fr")}}</td>
+                                                            <td>{{post.postsComments|length}}</td>
+                                                            <td>{{post.postsReports|length}}</td>
+                                                            <td>{{post.createdBy}}</td>
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                                        <a class="dropdown-item" href="{{path('app_admin_forum_edit_post', {id: post.id})}}">Modifier</a>
+                                                                        <a class="dropdown-item" href="{{path('app_admin_forum_delete_post', {id: post.id})}}">Supprimer</a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                        <h3 class="mt-4">Commentaires</h3>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover dt-responsive datatable nowrap w-100">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Commentaire</th>
+                                                        <th scope="col">Créer le</th>
+                                                        <th scope="col">Post</th>
+                                                        <th scope="col">Créer par</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+        
+                                                <tbody>
+                                                    {% for comment in comments %}
+                                                        <tr>
+                                                            <td>
+                                                                <h5 class="text-truncate font-size-14">
+                                                                    {{ comment.content|length > 50 ? comment.content|slice(0, 50) ~ '...' : comment.content  }}
+                                                                </h5>
+                                                            </td>
+                                                            <td>{{comment.createdAt|format_datetime('short', 'short', locale="fr")}}</td>
+                                                            <td><a href="{{path('app_forum_single_post', {id: comment.post.id})}}">{{comment.post.title}}</a></td>
+                                                            <td>{{comment.createdBy}}</td>
+                                                            <td>
+                                                                <div class="dropdown">
+                                                                    <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                                                                    </a>
+                                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                                        <a class="dropdown-item" href="{{path('app_forum_single_post', {id: comment.post.id})}}">Voir le post</a>
+                                                                        <a class="dropdown-item" href="{{path('app_admin_delete_comments', {id: comment.id})}}">Supprimer</a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- container-fluid -->
+                </div>
+                <!-- End Page-content -->
+
+                
+                {{ include('partials/footer.html.twig') }}
+            </div>
+            <!-- end main content-->
+
+        </div>
+        <!-- END layout-wrapper -->
+
+        {{ include('partials/right-sidebar.html.twig') }}
+
+        {{ include('partials/vendor-scripts.html.twig') }}
+        
+        <!-- App js -->
+        <script src="/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<!-- bootstrap-datepicker js -->
+<script src="/libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<!-- Responsive examples -->
+<script src="/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+        <script src="/js/app.js"></script>
+        <script>$(document).ready(function () {
+
+var allTables = document.querySelectorAll('.datatable');
+
+    allTables.forEach(function (value) {
+        var table = $(value).DataTable({
+            lengthChange: false,
+            searching: false,
+            language: {
+                url: "/js/pages/dataFrench.json"
+            },
+            buttons: []
+        });
+
+        table.buttons().container().appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+
+        $(".dataTables_length select").addClass('form-select form-select-sm');
+    });
+});</script>
+
+
+    </body>
+</html>

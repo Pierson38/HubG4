@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://hubg4.braquemard.fr/sitemap.xml

@@ -46,11 +46,11 @@ class CalendarController extends AbstractController
 
             $event->setCreatedBy($user);
             $type = "bde";
-            if (in_array("ROLE_ADMIN", $user->getRoles())) {
-                $type = "admin";
-            } elseif (in_array("ROLE_PROFESSOR", $user->getRoles())) {
+            if ($this->isGranted("ROLE_COP")) {
+                $type = "cop";
+            } elseif ($this->isGranted("ROLE_PROFESSOR")) {
                 $type = "professor";
-            } elseif (in_array("ROLE_BDE", $user->getRoles())) {
+            } elseif ($this->isGranted("ROLE_BDE")) {
                 $type = "bde";
             }
             $event->setType($type);
