@@ -72,6 +72,11 @@ class CovoitController extends AbstractController
     #[Route('/carpool/accept/{id}', name: 'app_covoit_accept')]
     public function accept(CarpoolMembers $member, EmailService $emailService, EntityManagerInterface $manager): Response
     {
+        $carpool = $member->getCarpool();
+        if ($carpool->getMembersCount() >= $carpool->getPlaces()) {
+            $this->addFlash('error', "Il n'y a plus de place de disponible");
+            return $this->redirectToRoute('app_covoit_solo', ['id' => $carpool->getId()]);
+        }
         
         $member->setIsAccepted(true);
         $manager->persist($member);

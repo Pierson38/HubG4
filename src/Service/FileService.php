@@ -206,6 +206,9 @@ class FileService
         $permissions->setIsDeletable(false);
         $this->manager->persist($permissions);
 
+        $promo->setFolder($folder);
+        $this->manager->persist($promo);
+
         $this->manager->flush();
 
         $path = $this->appKernel->getProjectDir() . '/public/uploads/drive/promos/' . $folder->getId();

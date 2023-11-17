@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Events;
 use App\Form\CreateEventType;
+use App\Repository\CarpoolRepository;
 use App\Repository\EventsRepository;
 use App\Repository\UserRepository;
 use App\Service\EmailService;
@@ -96,7 +97,7 @@ class CalendarController extends AbstractController
     }
 
     #[Route('/calendar/get-events/', name: 'app_calendar_getevents', methods: ['GET'])]
-    public function requestByDay(EventsRepository $eventsRepository, SerializerInterface $serializer): JsonResponse
+    public function requestByDay(EventsRepository $eventsRepository, SerializerInterface $serializer, CarpoolRepository $carpoolRepository): JsonResponse
     {
 
         $user = $this->getUserFromInterface();
@@ -106,6 +107,8 @@ class CalendarController extends AbstractController
         $eventsPromo = $user->getPromo()->getEvents()->getValues();
 
         $events = $eventsRepository->getEventsForAll();
+
+        $carpools = $carpoolRepository->getCarpoolAccepted($user);
 
         $all = [];
 
@@ -124,6 +127,12 @@ class CalendarController extends AbstractController
         foreach ($events as $value) {
             $all[] = $serializer->serialize($value, 'json', [
                 'groups' => ['eventsEvent'] // On serialize la réponse avant de la renvoyer
+            ]);
+        }
+
+        foreach ($carpools as $value) {
+            $all[] = $serializer->serialize($value, 'json', [
+                'groups' => ['carpoolEvent'] // On serialize la réponse avant de la renvoyer
             ]);
         }
 

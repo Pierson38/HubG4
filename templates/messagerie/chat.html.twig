@@ -34,7 +34,7 @@
                                 <div class="tab-content py-4">
                                     <div class="tab-pane show active" id="chat">
                                         <div>
-                                            <h5 class="font-size-14 mb-3">Recent</h5>
+                                            <h5 class="font-size-14 mb-3">Récent</h5>
                                             <ul class="list-unstyled chat-list" data-simplebar
                                                 style="max-height: 410px;">
                                                 {% for conv in conversations %}
@@ -130,23 +130,24 @@
                                             <div class="col">
                                                 <div class="position-relative">
                                                     <input type="text" class="form-control chat-input"
-                                                        placeholder="Enter Message..." id="inputMessage">
+                                                        placeholder="Ecrire un message..." id="inputMessage">
                                                     <div class="chat-input-links" id="tooltip-container">
                                                         <ul class="list-inline mb-0">
-                                                            <li class="list-inline-item"><a href="javascript: void(0);"
+                                                            {# <li class="list-inline-item"><a href="javascript: void(0);"
                                                                     title="Emoji"><i
                                                                         class="mdi mdi-emoticon-happy-outline"></i></a>
-                                                            </li>
+                                                            </li> #}
                                                             <li class="list-inline-item">
                                                                 <button type="button" title="Images" class="bg-transparent border border-0" data-bs-toggle="modal" data-bs-target="#addImageMessage"><i
                                                                     class="mdi mdi-file-image-outline"></i></button>
+                                                            </li>
                                                             {#     <button type="button"
                                                                     title="Images"><i
                                                                         class="mdi mdi-file-image-outline"></i></button> #}</li>
-                                                            <li class="list-inline-item"><a href="javascript: void(0);"
+                                                            {# <li class="list-inline-item"><a href="javascript: void(0);"
                                                                     title="Add Files"><i
                                                                         class="mdi mdi-file-document-outline"></i></a>
-                                                            </li>
+                                                            </li> #}
                                                         </ul>
                                                     </div>
                                                 </div>

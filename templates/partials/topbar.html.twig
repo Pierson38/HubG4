@@ -2,13 +2,13 @@
     <div class="navbar-header">
         <div class="d-flex">
             <!-- LOGO -->
-            <div class="navbar-brand-box">
+            <div class="navbar-brand-box" style="padding: 0!important;">
                 <a href="{{ path('home') }}" class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="/images/logo.svg" alt="" height="40">
                     </span>
                     <span class="logo-lg">
-                        <img src="/images/logo-dark.png" alt="" height="51">
+                        <img src="/images/logo-dark.png" alt="" height="51" style="width: 100%; object-fit: cover;">
                     </span>
                 </a>
 
@@ -17,7 +17,7 @@
                         <img src="/images/logo-light.svg" alt="" height="40">
                     </span>
                     <span class="logo-lg">
-                        <img src="/images/logo-light.png" alt="" height="77.73">
+                        <img src="/images/logo-light.png" alt="" height="77.73" style="width: 100%; object-fit: cover;">
                     </span>
                 </a>
             </div>
@@ -36,39 +36,6 @@
                 </button>
             </div>
 
-            <div class="dropdown d-inline-block">
-                <button type="button" style="background-color: transparent; color: #555b6d; padding: 0.47rem 0.75rem; border-radius: 0.25rem;" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bx bx-bell bx-tada"></i>
-                    <span class="badge bg-danger rounded-pill">1</span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
-                    aria-labelledby="page-header-notifications-dropdown">
-                    <div class="p-3">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <h6 class="m-0" key="t-notifications"> {% trans %}Notifications{% endtrans %} </h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div data-simplebar style="max-height: 230px;">
-
-                        <a href="javascript: void(0);" class="text-reset notification-item">
-                            <div class="d-flex">
-                                <img src="/images/users/avatar-4.jpg"
-                                    class="me-3 rounded-circle avatar-xs" alt="user-pic">
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1">Salena Layfield</h6>
-                                    <div class="font-size-12 text-muted">
-                                        <p class="mb-1" key="t-occidental">{% trans %}As a skeptical Cambridge friend of mine occidental.{% endtrans %}</p>
-                                        <p class="mb-0"><i class="mdi mdi-clock-outline"></i> <span key="t-hours-ago">{% trans %}5 hours ago{% endtrans %}</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
 
             <div class="dropdown d-inline-block">
                 <button type="button" style="background-color: transparent; color: #555b6d; padding: 0.47rem 0.75rem; border-radius: 0.25rem;" class="btn header-item waves-effect" id="page-header-user-dropdown"

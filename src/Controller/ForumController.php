@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Posts;
 use App\Entity\PostsCategories;
 use App\Entity\PostsComments;
+use App\Form\CategoryPostType;
 use App\Form\CreatePostType;
 use App\Form\PostCommentType;
 use App\Form\ReportPostType;
@@ -46,6 +47,33 @@ class ForumController extends AbstractController
             'postsCategories' => $postsCategories,
         ]);
     }
+
+    #[Route('/forum/category/create/{id}', name: 'app_forum_create_category')]
+    public function createCategory(PostsCategories $postsCategories, Request $request, EntityManagerInterface $manager): Response
+    {
+        $postsCategory = new PostsCategories();
+        $postsCategory->setCategoryParent($postsCategories);
+
+
+        $form = $this->createForm(CategoryPostType::class, $postsCategory);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $postsCategory = $form->getData();
+
+            $manager->persist($postsCategory);
+            $manager->flush();
+
+            $this->addFlash('success', 'Votre categorie a bien été créé');
+            return $this->redirectToRoute('app_forum_category', ['id' => $postsCategories->getId()]);
+        }
+
+
+        return $this->render('forum/createCategory.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
 
     #[Route('/forum/post/{id}', name: 'app_forum_single_post')]
     public function postSingle(Posts $post, Request $request, EntityManagerInterface $manager, PostsCommentsRepository $postsCommentsRepository): Response
