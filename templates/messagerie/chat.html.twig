@@ -30,23 +30,7 @@
                     <div class="chat-leftsidebar me-lg-4">
                         <div class="">
 
-                            <div class="search-box chat-search-box py-4">
-                                <div class="position-relative">
-                                    <input type="text" class="form-control" placeholder="Search...">
-                                    <i class="bx bx-search-alt search-icon"></i>
-                                </div>
-                            </div>
-
                             <div class="chat-leftsidebar-nav">
-                                <ul class="nav nav-pills nav-justified">
-                                    <li class="nav-item">
-                                        <a href="#chat" data-bs-toggle="tab" aria-expanded="true"
-                                            class="nav-link active">
-                                            <i class="bx bx-chat font-size-20 d-sm-none"></i>
-                                            <span class="d-none d-sm-block">Chat</span>
-                                        </a>
-                                    </li>
-                                </ul>
                                 <div class="tab-content py-4">
                                     <div class="tab-pane show active" id="chat">
                                         <div>
@@ -72,6 +56,8 @@
                                                         </div>
                                                     </a>
                                                 </li>
+                                                {% else %}
+                                                    Vous n'avez pas de conversations
                                                 {% endfor %}
                                             </ul>
                                         </div>

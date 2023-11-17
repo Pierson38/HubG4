@@ -6,6 +6,7 @@ use App\Entity\Events;
 use App\Form\CreateEventType;
 use App\Repository\EventsRepository;
 use App\Repository\UserRepository;
+use App\Service\EmailService;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
@@ -29,7 +30,7 @@ class CalendarController extends AbstractController
     }
 
     #[Route('/calendar', name: 'app_calendar')]
-    public function index(EventsRepository $eventsRepository, EntityManagerInterface $manager, Request $request): Response
+    public function index(EventsRepository $eventsRepository, EmailService $emailService, EntityManagerInterface $manager, Request $request, UserRepository $userRepository): Response
     {
         $user = $this->getUserFromInterface();
 
@@ -38,11 +39,33 @@ class CalendarController extends AbstractController
         $events = $eventsRepository->findAll();
 
         $myEvents = $user->getEvents()->getValues();
-        $form = $this->createForm(CreateEventType::class);
+
+        $event = new Events();
+        $event->setStartAt(new DateTimeImmutable());
+        $event->setEndAt(new DateTimeImmutable());
+        $form = $this->createForm(CreateEventType::class, $event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $event = $form->getData();
+
+            if (count($form->get('promo')->getData()) > 0) {
+                foreach ($form->get('promo')->getData() as $promo) {
+                    $event->addPromo($promo);
+
+                    foreach ($promo->getUsers() as $userPromo) {
+                        $emailService->sendEmail($userPromo, "new_event", [
+                            "link" => $this->generateUrl("app_calendar"),
+                        ]);
+                    }
+                }
+            } else {
+                foreach ($userRepository->findAll() as $userEvent) {
+                    $emailService->sendEmail($userEvent, "new_event", [
+                        "link" => $this->generateUrl("app_calendar"),
+                    ]);
+                }
+            }
 
             $event->setCreatedBy($user);
             $type = "bde";
@@ -80,13 +103,21 @@ class CalendarController extends AbstractController
 
         $courses = $user->getPromo()->getCourses()->getValues();
 
-        $events = $eventsRepository->findAll();
+        $eventsPromo = $user->getPromo()->getEvents()->getValues();
+
+        $events = $eventsRepository->getEventsForAll();
 
         $all = [];
 
         foreach ($courses as $value) {
             $all[] = $serializer->serialize($value, 'json', [
                 'groups' => ['coursesEvent'] // On serialize la réponse avant de la renvoyer
+            ]);
+        }
+
+        foreach ($eventsPromo as $value) {
+            $all[] = $serializer->serialize($value, 'json', [
+                'groups' => ['eventsEvent'] // On serialize la réponse avant de la renvoyer
             ]);
         }
 

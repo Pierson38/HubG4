@@ -24,20 +24,18 @@ class EventsRepository extends ServiceEntityRepository
 
     
 
-//    /**
-//     * @return Events[] Returns an array of Events objects
-//     */
-//    public function getEvents(User $user): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /* *
+    * @return Events[] Returns an array of Events objects
+    */
+    public function getEventsForAll(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.promos', 'p')
+            ->where('p.id IS NULL') // sélectionne les événements où il n'y a pas de promotions associées
+            ->orderBy('e.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
 //    public function findOneBySomeField($value): ?Events
 //    {

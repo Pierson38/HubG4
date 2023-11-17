@@ -37,7 +37,7 @@
                                     <div class="card-body">
                                         <h4 class="card-title">{{carpool.fromLocation ~ " -> " ~ carpool.toLocation}}</h4>
                                         <p class="card-text">{{carpool.date|format_datetime('long', 'short', locale="fr")}}</p>
-                                        <p class="card-text">{{carpool.carpoolMembers|length}} / {{carpool.places}} places</p>
+                                        <p class="card-text">{{carpool.membersCount}} / {{carpool.places}} places</p>
                                         <div class="avatar-group">
                                         {% for member in carpool.carpoolMembers.values %}
                                         {% if member.isAccepted %}

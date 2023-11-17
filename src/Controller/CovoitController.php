@@ -7,6 +7,7 @@ use App\Entity\CarpoolMembers;
 use App\Form\CarpoolType;
 use App\Repository\CarpoolRepository;
 use App\Repository\UserRepository;
+use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,11 +44,11 @@ class CovoitController extends AbstractController
     }
 
     #[Route('/carpool/join/{id}', name: 'app_covoit_join')]
-    public function join(Carpool $carpool, EntityManagerInterface $manager): Response
+    public function join(Carpool $carpool, EmailService $emailService, EntityManagerInterface $manager): Response
     {
         
-
-        if ($carpool->getCreatedBy() == $this->getUserFromInterface() || $carpool->getPlaces() >= $carpool->getCarpoolMembers()->count() || $this->checkIfUserIsInCarpool($carpool)) {
+        // dd($carpool->getCreatedBy() == $this->getUserFromInterface(), $carpool->getCarpoolMembers()->count() >= $carpool->getPlaces(), $this->checkIfUserIsInCarpool($carpool), $carpool->getPlaces(), $carpool->getCarpoolMembers()->count());
+        if ($carpool->getCreatedBy() == $this->getUserFromInterface() || $carpool->getMembersCount() >= $carpool->getPlaces() || $this->checkIfUserIsInCarpool($carpool)) {
             $this->addFlash('error', 'Vous ne pouvez pas rejoindre le covoiturage.');
             return $this->redirectToRoute('app_covoit_solo', ['id' => $carpool->getId()]);
         }
@@ -59,8 +60,48 @@ class CovoitController extends AbstractController
         $member->setIsAccepted(false);
         $manager->persist($member);
         $manager->flush();
+        $emailService->sendEmail($carpool->getCreatedBy(), 'carpool_request', [
+            'link' => $this->generateUrl('app_covoit_solo', ['id' => $carpool->getId()]),
+            "user" => $this->getUserFromInterface(),
+        ]);
+
         $this->addFlash('success', 'Votre demande a bien été envoyée.');
         return $this->redirectToRoute('app_covoit_solo', ['id' => $carpool->getId()]);
+    }
+
+    #[Route('/carpool/accept/{id}', name: 'app_covoit_accept')]
+    public function accept(CarpoolMembers $member, EmailService $emailService, EntityManagerInterface $manager): Response
+    {
+        
+        $member->setIsAccepted(true);
+        $manager->persist($member);
+        $manager->flush();
+
+        $emailService->sendEmail($this->getUserFromInterface(), "carpool_accept", [
+            "link" => $this->generateUrl("app_covoit_solo", ["id" => $member->getCarpool()->getId()]),
+            "carpool" => $member->getCarpool(),
+            "isAccepted" => true,
+        ]);
+
+        $this->addFlash('success', 'Vous avez accepté la demande de covoiturage.');
+        return $this->redirectToRoute('app_covoit_solo', ['id' => $member->getCarpool()->getId()]);
+    }
+
+    #[Route('/carpool/decline/{id}', name: 'app_covoit_decline')]
+    public function decline(CarpoolMembers $member, EmailService $emailService, EntityManagerInterface $manager): Response
+    {
+        
+        $manager->remove($member);
+        $manager->flush();
+
+        $emailService->sendEmail($this->getUserFromInterface(), "carpool_refuse", [
+            "link" => $this->generateUrl("app_covoit"),
+            "carpool" => $member->getCarpool(),
+            "isAccepted" => false,
+        ]);
+
+        $this->addFlash('success', 'Vous avez refusé la demande de covoiturage.');
+        return $this->redirectToRoute('app_covoit_solo', ['id' => $member->getCarpool()->getId()]);
     }
 
     #[Route('/carpool/create', name: 'app_covoit_create')]
@@ -107,12 +148,21 @@ class CovoitController extends AbstractController
     }
 
     #[Route('/carpool/delete/{id}', name: 'app_covoit_delete')]
-    public function delete(Carpool $carpool, EntityManagerInterface $manager): Response
+    public function delete(Carpool $carpool, EntityManagerInterface $manager, EmailService $emailService): Response
     {
 
         $manager->remove($carpool);
         $manager->flush();
         $this->addFlash('success', 'Votre covoiturage a bien été supprimé.');
+
+        foreach ($carpool->getCarpoolMembers() as $member) {
+            if ($member->isIsAccepted()) {
+                $emailService->sendEmail($member->getUser(), "carpool_cancel", [
+                    "link" => $this->generateUrl("app_covoit"),
+                    "carpool" => $member->getCarpool(),
+                ]);
+            }
+        }
 
         return $this->redirectToRoute('app_covoit');
     }

@@ -10,6 +10,7 @@ use App\Repository\ConversationsRepository;
 use App\Repository\MessagesRepository;
 use App\Repository\UserRepository;
 use App\Service\ConversationService;
+use App\Service\EmailService;
 use App\Service\FileService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,6 +23,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class MessagerieController extends AbstractController
@@ -58,9 +60,6 @@ class MessagerieController extends AbstractController
         } else {
             $conv = null;
         }
-       
-        // dd($conversations[0]);
-
         
         return $this->render('messagerie/chat.html.twig', [
             'user' => $user,
@@ -127,7 +126,7 @@ class MessagerieController extends AbstractController
 
     // #[Security("is_granted('IS_AUTHENTICATED_FULLY')")]
     #[Route('/conversation/{id}/add-message', name: 'app_messengers_add_message', methods: ['POST'])]
-    public function sendMessage(Conversations $conversation = null, Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, HubInterface $hub, UserRepository $userRepository): JsonResponse
+    public function sendMessage(Conversations $conversation = null, EmailService $emailService, Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, HubInterface $hub, UserRepository $userRepository): JsonResponse
     {
         if (empty($content = $request->request->get('content'))) {
             throw new AccessDeniedHttpException('No data sent');
@@ -140,13 +139,24 @@ class MessagerieController extends AbstractController
         $message = new Messages();
         $message->setContent($content);
         $message->setConversation($conversation);
-        $message->setCreatedBy($userRepository->findOneBy(['id' => (int)$request->request->get('userId')]));
+        $message->setCreatedBy($this->getUserFromInterface());
 
         $conversation->setUpdatedAt(new DateTimeImmutable());
         $manager->persist($conversation);
         $manager->persist($message);
         $manager->flush();
 
+        if ($message->getConversation()->getFromUser() == $this->getUserFromInterface()) {
+            $otherUser = $message->getConversation()->getToUser();
+        } else {
+            $otherUser = $message->getConversation()->getFromUser();
+        }
+
+        $emailService->sendEmail($message->getConversation()->getToUser(), "new_message", [
+            'user' => $otherUser,
+            'message' => $message,
+            "link" => $this->generateUrl('app_messengers_solo', ['id' => $message->getConversation()->getId()], UrlGeneratorInterface::ABSOLUTE_URL)
+        ]);
 
         $response = new JsonResponse( // Enfin, on retourne la réponse
             $message->getId(),

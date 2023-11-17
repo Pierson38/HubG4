@@ -55,6 +55,8 @@ class Carpool
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $toLong = null;
 
+    private ?int $membersCount = null;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
@@ -238,6 +240,18 @@ class Carpool
     public function setToLong(?string $toLong): static
     {
         $this->toLong = $toLong;
+
+        return $this;
+    }
+
+    public function getMembersCount(): ?int
+    {
+        return $this->membersCount;
+    }
+
+    public function setMembersCount(?int $membersCount): static
+    {
+        $this->membersCount = $membersCount;
 
         return $this;
     }

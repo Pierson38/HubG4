@@ -37,7 +37,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user->setFirstName($faker->firstName());
             $user->setLastName($faker->lastName());
             $user->setUsername($faker->userName());
-            $user->setCampus($this->getReference(CampusFixtures::CAMPUS_REFERENCE . $faker->numberBetween(0, 2)));
             $user->setPromo($this->getReference(PromoFixtures::PROMO_REFERENCE . $faker->numberBetween(0, 4)));
 
             $manager->persist($user);
@@ -56,7 +55,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            CampusFixtures::class,
             PromoFixtures::class,
         ];
     }

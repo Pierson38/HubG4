@@ -2,13 +2,15 @@
 
 namespace App\EventListener;
 
+use App\Entity\Carpool;
 use App\Entity\Folder;
+use App\Repository\CarpoolMembersRepository;
 use App\Service\FileService;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 class FolderEventListener
 {
-    public function __construct(private FileService $fileService)
+    public function __construct(private FileService $fileService, private CarpoolMembersRepository $carpoolMembersRepository)
     {
     }
 
@@ -35,6 +37,10 @@ class FolderEventListener
         if ($entity instanceof Folder) {
             $entity->setFilesCount($this->fileService->getNumberOfFiles($entity));
             $entity->setWeight($this->formatSizeUnits($this->fileService->getWeightOfFilesFolder($entity)));
+        }
+
+        if ($entity instanceof Carpool) {
+            $entity->setMembersCount($this->carpoolMembersRepository->getMembersCount($entity));
         }
     }
 }

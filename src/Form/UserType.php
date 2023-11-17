@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Campus;
 use App\Entity\Promo;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -51,13 +50,6 @@ class UserType extends AbstractType
                 'label' => 'Nom',
             ])
             ->add('username', TextType::class, [
-                'attr' => [
-                    'class' => 'form-control mb-2'
-                ],
-            ])
-            ->add('campus', EntityType::class, [
-                'class' => Campus::class,
-                'choice_label' => 'name',
                 'attr' => [
                     'class' => 'form-control mb-2'
                 ],

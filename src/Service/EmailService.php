@@ -18,6 +18,8 @@ class EmailService
         switch ($type) {
             case 'new_message':
                 return 'Vous avez reçu un nouveau message';
+            case "new_event":
+                    return 'Nouvel évènement';
             case 'registration':
                 return 'Bienvenue sur HubG4';
             case 'carpool_request':
@@ -40,7 +42,10 @@ class EmailService
         $toReturn = null;
         switch ($type) {
             case 'new_message':
-                $toReturn = 'emails/new_message.html.twig';
+                $toReturn = 'emails/new-message.html.twig';
+                break;
+            case "new_event":
+                $toReturn = 'emails/new-event.html.twig';
                 break;
             case 'registration':
                 $toReturn = 'emails/new-account.html.twig';
@@ -55,7 +60,7 @@ class EmailService
                 $toReturn = 'emails/covoit-request-answer.html.twig';
                 break;
             case 'carpool_cancel':
-                $toReturn = null;
+                $toReturn = 'emails/covoit-cancel.html.twig';
                 break;
             case 'new_course':
                 $toReturn = 'emails/new-course.html.twig';
@@ -77,8 +82,6 @@ class EmailService
             ->context([
                 'data' => $data,
             ]);
-
-            dd($email);
 
         $this->mailer->send($email);
     }

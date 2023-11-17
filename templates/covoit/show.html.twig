@@ -34,13 +34,13 @@
 				{{ include('partials/page-title.html.twig', {pagetitle: 'Covoiturage', title: 'Hub'}) }}
 
 				<div class="row">
-					<div class="col-xl-4">
+					<div class="col-xl-6">
 						<div class="card">
 							<div class="card-body">
 								<h4 class="card-title">{{carpool.fromLocation ~ " -> " ~ carpool.toLocation}}</h4>
 								<p class="card-text">{{carpool.date|format_datetime('long', 'short', locale="fr")}}</p>
 								<p>Proposé par : {{carpool.createdBy}}</p>
-								<p class="card-text">{{carpool.carpoolMembers|length}}
+								<p class="card-text">{{carpool.membersCount}}
 									/
 									{{carpool.places}}
 									places</p>
@@ -64,6 +64,12 @@
 														</a>
 
 													</td>
+													<td>
+														{% if carpool.createdBy == app.user and member.isAccepted == false %}
+														<a href="{{path("app_covoit_accept", {id: member.id})}}" class="btn btn-primary">Accepter</a>
+														<a href="{{path("app_covoit_decline", {id: member.id})}}" class="btn btn-danger">Refuser</a>
+														{% endif %}
+													</td>
 												</tr>
 											{% else %}
 
@@ -77,15 +83,19 @@
 						</div>
 
 						<div class="card">
+							<div class="card-body">
+								{% if carpool.createdBy == app.user %}
+							<a href="{{ path('app_covoit_edit', {id: carpool.id}) }}" class="btn btn-primary">Modifier</a>
+							<a href="{{ path('app_covoit_delete', {id: carpool.id}) }}" class="btn btn-danger">Supprimer</a>
+							{% else %}
 							<a href="{{ path('app_covoit_join', {id: carpool.id}) }}" class="btn btn-primary">Demander à rejoindre</a>
-							<a href="{{ path('app_messengers_create_converstation_user', {id: carpool.createdBy.id}) }}" class="btn btn-secondary mt-2">Contacter la personne</a>
-							{% if carpool.createdBy == app.user %}
-							<a href="{{ path('app_covoit_edit', {id: carpool.id}) }}" class="btn btn-primary mt-2">Modifier</a>
-							<a href="{{ path('app_covoit_delete', {id: carpool.id}) }}" class="btn btn-danger mt-2">Supprimer</a>
+							<a href="{{ path('app_messengers_create_converstation_user', {id: carpool.createdBy.id}) }}" class="btn btn-secondary">Contacter la personne</a>
 							{% endif %}
+							</div>
+							
 						</div>
 					</div>
-					<div class="col-xl-8">
+					<div class="col-xl-6">
 						<div class="card">
 							<div class="card-body">
 								{% if carpool.fromLat != null and carpool.toLat != null %}

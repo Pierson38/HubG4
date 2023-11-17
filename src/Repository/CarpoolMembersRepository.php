@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Carpool;
 use App\Entity\CarpoolMembers;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,28 +22,27 @@ class CarpoolMembersRepository extends ServiceEntityRepository
         parent::__construct($registry, CarpoolMembers::class);
     }
 
-//    /**
-//     * @return CarpoolMembers[] Returns an array of CarpoolMembers objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return integer Returns an array of CarpoolMembers objects
+     */
+    public function getMembersCount(Carpool $carpool): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('count(c.id)')
+            ->andWhere('c.carpool = :val')
+            ->andWhere('c.isAccepted = 1')
+            ->setParameter('val', $carpool)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
-//    public function findOneBySomeField($value): ?CarpoolMembers
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?CarpoolMembers
+    //    {
+    //        return $this->createQueryBuilder('c')
+    //            ->andWhere('c.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

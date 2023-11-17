@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -54,10 +56,14 @@ class Events
     #[Groups("eventsEvent")]
     private ?string $link = null;
 
+    #[ORM\ManyToMany(targetEntity: Promo::class, mappedBy: 'events')]
+    private Collection $promos;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->updatedAt = new \DateTimeImmutable();
+        $this->promos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,6 +187,33 @@ class Events
     public function setLink(?string $link): static
     {
         $this->link = $link;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Promo>
+     */
+    public function getPromos(): Collection
+    {
+        return $this->promos;
+    }
+
+    public function addPromo(Promo $promo): static
+    {
+        if (!$this->promos->contains($promo)) {
+            $this->promos->add($promo);
+            $promo->addEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromo(Promo $promo): static
+    {
+        if ($this->promos->removeElement($promo)) {
+            $promo->removeEvent($this);
+        }
 
         return $this;
     }
