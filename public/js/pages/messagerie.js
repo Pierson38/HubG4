@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 responseData.forEach(element => {
                     element = JSON.parse(element);
                     $.ajax({
-                        url: 'https://127.0.0.1:8000/conversation-utils/getTemplateSelfMessage/' + element.id,
+                        url: '/conversation-utils/getTemplateSelfMessage/' + element.id,
                         method: 'GET',
                         headers: {
                             "Access-Control-Allow-Origin": "*",
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             $.ajax({
-                url: 'https://127.0.0.1:8000/conversation/' + convId + '/add-message',
+                url: '/conversation/' + convId + '/add-message',
                 method: 'POST',
                 data: data,
                 headers: {
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }).done(function (responseData) {
                 $.ajax({
-                    url: 'https://127.0.0.1:8000/conversation-utils/getTemplateSelfMessage/' + responseData,
+                    url: '/conversation-utils/getTemplateSelfMessage/' + responseData,
                     method: 'GET',
                     headers: {
                         "Access-Control-Allow-Origin": "*",
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data.append('image', image);
 
         $.ajax({
-            url: 'https://127.0.0.1:8000/conversation/' + convId + '/add-image-message',
+            url: '/conversation/' + convId + '/add-image-message',
             method: 'POST',
             data: data,
             processData: false,
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }).done(function (responseData) {
             console.log(responseData);
             $.ajax({
-                url: 'https://127.0.0.1:8000/conversation-utils/getTemplateSelfMessage/' + responseData,
+                url: '/conversation-utils/getTemplateSelfMessage/' + responseData,
                 method: 'GET',
                 headers: {
                     "Access-Control-Allow-Origin": "*",
