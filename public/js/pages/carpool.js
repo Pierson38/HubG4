@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
             L.latLng(coordonates.from.lat, coordonates.from.lng),
             L.latLng(coordonates.to.lat, coordonates.to.lng)
         ],
+        addWaypoints: false,
+        fitSelectedRoutes: true,
         router: L.Routing.mapbox('pk.eyJ1IjoicGllcnNvbjM4IiwiYSI6ImNscDFndTkxZzBncnQyaXF1OXVkbjh6dW8ifQ.Qgl-uCRksKb7DAk0eK5ewg')
     }).addTo(map);
 });

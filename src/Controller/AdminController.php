@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Conversations;
 use App\Entity\Courses;
+use App\Entity\Lbc;
 use App\Entity\Messages;
 use App\Entity\Posts;
 use App\Entity\PostsComments;
@@ -15,6 +16,7 @@ use App\Form\PromosType;
 use App\Form\UserType;
 use App\Repository\ConversationsRepository;
 use App\Repository\CoursesRepository;
+use App\Repository\LbcRepository;
 use App\Repository\PostsCommentsRepository;
 use App\Repository\PostsRepository;
 use App\Repository\PromoRepository;
@@ -74,10 +76,12 @@ class AdminController extends AbstractController
             $user = $form->getData();
             $user->setPassword($userPasswordHasher->hashPassword($user, $user->getLastname()));
 
-            $role = $form->get("roles")->getData();
-            if ($role != "ROLE_USER") {
-                $user->setRoles(["ROLE_USER", $role]);
+            $roles = $form->get("roles")->getData();
+            if (in_array("ROLE_USER", $roles)) {
+                //Supprimer le ROLE_USER si il est présent
+                $roles = array_diff($roles, ["ROLE_USER"]);
             }
+            $user->setRoles($roles);
             $user->setPicture("https://picsum.photos/200/300");
 
             $manager->persist($user);
@@ -145,7 +149,7 @@ class AdminController extends AbstractController
     }
 
     #[Route('/courses/create', name: 'app_admin_courses_create')]
-    public function adminCoursesCreate(EntityManagerInterface $manager, Request $request, FileService $fileService): Response
+    public function adminCoursesCreate(EntityManagerInterface $manager, EmailService $emailService, Request $request, FileService $fileService): Response
     {
 
         $form = $this->createForm(CoursesType::class);
@@ -174,6 +178,13 @@ class AdminController extends AbstractController
 
             $manager->persist($course);
             $manager->flush();
+
+            foreach ($course->getPromo()->getUsers()->getValues() as $member) {
+                $emailService->sendEmail($member, "new_course", [
+                    "link" => $this->generateUrl("app_courses_single", ["id" => $course->getId()]),
+                    "course" => $course,
+                ]);
+            }
 
             $this->addFlash("success", "Le cours a bien été créé");
             return $this->redirectToRoute("app_admin_courses");
@@ -392,6 +403,26 @@ class AdminController extends AbstractController
         $this->addFlash('success', 'Le message a bien été supprimé');
 
         return $this->redirectToRoute('app_admin_conversations_messages', ["id" => $message->getConversation()->getId()]);
+    }
+
+    #[Route('/lbc', name: 'app_admin_lbc')]
+    public function adminLbc(LbcRepository $lbcRepository): Response
+    {
+        return $this->render('admin/lbc.html.twig', [
+            'lbcs' => $lbcRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/lbc/delete/{id}', name: 'app_lbc_delete')]
+    public function adminLbcDelete(Lbc $lbc, EntityManagerInterface $entityManager): Response
+    {
+
+        $entityManager->remove($lbc);
+        $entityManager->flush();
+
+        $this->addFlash("success","L'annonce a bien été supprimé");
+
+        return $this->redirectToRoute("app_admin_lbc");
     }
 
 }

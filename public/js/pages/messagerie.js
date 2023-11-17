@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    /*  let chatDiv = document.querySelector('.overflow-auto');
-     chatDiv.scrollTop = chatDiv.scrollHeight; // On souhaite scroller toujours jusqu'au dernier message du chat */
+    /* let chatDiv = document.querySelector('.overflow-auto');
+        chatDiv.scrollTop = chatDiv.scrollHeight; // On souhaite scroller toujours jusqu'au dernier message du chat */
 
     let form = document.getElementById('inputMessageForm');
     function handleForm(event) {
@@ -38,9 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
                             "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
                         }
                     }).done(function (responseData) {
-
+                        console.log($('.last-chat'));
+                        $('.last-chat').forEach(element => {
+                            element.classList.remove('last-chat');
+                        });
                         $('.chat-conversation .simplebar-content').append(responseData);
                         //recuperrer element avec .simplebar-content
+
+                        var maDiv = document.querySelector('.chat-conversation .simplebar-content-wrapper');
+                        $('.chat-conversation .simplebar-content').css('height', "auto")
+                        maDiv.scrollTop = maDiv.scrollHeight;
 
                         // let chatDiv = document.querySelector('.simplebar-content-wrapper');
                         // keepScrolledToBottom(chatDiv);
@@ -87,8 +94,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 }).done(function (responseData) {
 
                     $('.chat-conversation .simplebar-content').append(responseData);
+                    $('.chat-conversation .simplebar-content').css('height', "auto")
                     //recuperrer element avec .simplebar-content
-
+                    var maDiv = document.querySelector('.chat-conversation .simplebar-content-wrapper');
+                    maDiv.scrollTop = maDiv.scrollHeight;
                     // let chatDiv = document.querySelector('.simplebar-content-wrapper');
                     // keepScrolledToBottom(chatDiv);
 
@@ -139,8 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 $('#addImageMessage').modal('hide');
                 $('.chat-conversation .simplebar-content').append(responseDataa);
+                $('.chat-conversation .simplebar-content').css('height', "auto")
                 //recuperrer element avec .simplebar-content
-
+                var maDiv = document.querySelector('.chat-conversation .simplebar-content-wrapper');
+                maDiv.scrollTop = maDiv.scrollHeight;
                 // let chatDiv = document.querySelector('.simplebar-content-wrapper');
                 // keepScrolledToBottom(chatDiv);
 
@@ -155,4 +166,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     imageForm.addEventListener('submit', handleImageMessageForm);
 
+    var maDiv = document.querySelector('.chat-conversation .simplebar-content-wrapper');
+    maDiv.scrollTop = maDiv.scrollHeight;
+
+    if ($('.chat-conversation .simplebar-content').children().length == 0) {
+        $('.chat-conversation .simplebar-content').css('height', "8em")
+    }
 });

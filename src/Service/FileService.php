@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\Files;
 use App\Entity\Folder;
+use App\Entity\Lbc;
+use App\Entity\LbcPictures;
 use App\Entity\Permissions;
 use App\Entity\Promo;
 use App\Entity\User;
@@ -106,6 +108,45 @@ class FileService
         }
 
         return $count;
+    }
+
+    public function addImagesToLbc(Lbc $lbc, array $images)
+    {
+
+        $path = $this->appKernel->getProjectDir() . '/public/uploads/lbc/' . $lbc->getId();
+
+        if (!$this->fileSystem->exists($path)) {
+            $this->fileSystem->mkdir($path, 0777, true);
+        }
+
+        foreach ($images as $image) {
+            $fileName = md5(uniqid()) . '.' . $image->guessExtension();
+            $image->move(
+                $path,
+                $fileName
+            );
+
+            $lbcImage = new LbcPictures();
+            $lbcImage->setLbc($lbc);
+            $lbcImage->setName('/uploads/lbc/' . $lbc->getId() . '/' . $fileName);
+            $this->manager->persist($lbcImage);
+            $this->manager->flush();
+        }
+
+        // dd($images, $lbc->getLbcPictures()->getValues());
+    }
+
+    public function deleteImageLbc(LbcPictures $lbcImage)
+    {
+        $path = $this->appKernel->getProjectDir() . '/public' . $lbcImage->getName();
+        try {
+            $this->fileSystem->remove($path);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        $this->manager->remove($lbcImage);
+        $this->manager->flush();
     }
 
     public function createPersonalRepository(User $user)

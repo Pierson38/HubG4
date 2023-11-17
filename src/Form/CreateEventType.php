@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Events;
+use App\Entity\Promo;
 use Doctrine\DBAL\Types\DateTimeImmutableType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -46,7 +48,17 @@ class CreateEventType extends AbstractType
                     'class' => 'form-control',
                     'style' => 'max-height: 100px; overflow-y: auto; border: none;'
                 ],
-            ]);
+            ])
+            ->add('promo', EntityType::class, [
+                'class' => Promo::class,
+                'choice_label' => 'name',
+                'label' => 'Promo',
+                "multiple" => true,
+                "mapped" => false,
+                'attr' => ['class' => 'form-control'],
+                "required" => false,
+            ])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

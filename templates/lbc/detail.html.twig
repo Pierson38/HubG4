@@ -49,10 +49,10 @@
 										<p>VENDU PAR : {{product.createdBy}}</p>
                                         <p>PRIX : {{product.price}}€</p>
                                         <ul>
+											<a href="{{ path('app_messengers_create_converstation_user', {id: product.createdBy.id}) }}" class="btn btn-primary mt-4 d-block">
+												Contacter le vendeur
+											</a>
                                     </div>
-                                     <a href="{{ path('app_messengers_create_converstation_user', {id: product.createdBy.id}) }}" class="btn btn-primary">
-                                        Contacter le vendeur
-                                    </a>
                                 </div>
 							</div>
                             

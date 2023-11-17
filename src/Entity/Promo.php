@@ -31,11 +31,15 @@ class Promo
     #[ORM\JoinColumn(nullable: true)]
     private ?Folder $folder = null;
 
+    #[ORM\ManyToMany(targetEntity: Events::class, inversedBy: 'promos')]
+    private Collection $events;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->courses = new ArrayCollection();
         $this->permissions = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -156,4 +160,29 @@ class Promo
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Events>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Events $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Events $event): static
+    {
+        $this->events->removeElement($event);
+
+        return $this;
+    }
+
 }
